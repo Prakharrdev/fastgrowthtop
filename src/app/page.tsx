@@ -4,6 +4,7 @@ import { Problem } from "@/components/sections/Problem";
 import { SolutionsHero } from "@/components/sections/SolutionsHero";
 import { SolutionsGrid } from "@/components/sections/SolutionsGrid";
 import { GoalBanner } from "@/components/sections/GoalBanner";
+import { SiteAudit } from "@/components/sections/SiteAudit";
 import { RecentWork } from "@/components/sections/RecentWork";
 import { About } from "@/components/sections/About";
 import { Reviews } from "@/components/sections/Reviews";
@@ -26,6 +27,7 @@ export default function Home() {
           <SolutionsHero />
           <SolutionsGrid />
           <GoalBanner />
+          <SiteAudit />
         </div>
 
         {/* 04 — Recent Work */}
