@@ -6,3 +6,5 @@ playwright-report/
 playwright/.cache/
 *.playwright/
 .playwright-mcp/
+*.DS_Store 
+.next/
