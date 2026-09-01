@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const navItems = [
-  { label: "Work", href: "#work" },
   { label: "Solutions", href: "#solutions" },
+  { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
@@ -14,13 +14,47 @@ const navItems = [
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+
+      // If at very top (e.g. hero), no specific section active
+      if (window.scrollY < 160) {
+        setActiveSection("");
+        return;
+      }
+
+      // If near bottom of page, activate contact
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 80) {
+        setActiveSection("contact");
+        return;
+      }
+
+      const sectionIds = ["solutions", "work", "about", "reviews", "contact"];
+      let current = "";
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Active when section top is near upper viewport and bottom is still below header
+          if (rect.top <= 240 && rect.bottom >= 120) {
+            current = id;
+            break;
+          }
+        }
+      }
+
+      if (current) {
+        setActiveSection(current);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -38,7 +72,7 @@ export function Header() {
       <header
         className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
           scrolled
-            ? "bg-[#F7F5F0]/90 backdrop-blur-[16px] shadow-sm"
+            ? "bg-[#F7F5F0]/90 backdrop-blur-[16px] shadow-sm border-b border-[#D8D4CB]/40"
             : "bg-[#F7F5F0]"
         }`}
       >
@@ -54,23 +88,34 @@ export function Header() {
               </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-10">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="text-[13px] font-medium text-[#77736B] hover:text-[#18202A] transition-colors duration-300 uppercase tracking-[0.08em]"
-                >
-                  {item.label}
-                </Link>
-              ))}
+            {/* Desktop Nav with Glow Pill */}
+            <nav className="hidden lg:flex items-center gap-1.5 bg-[#EFECE5]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#D8D4CB]/70 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.href.replace("#", "");
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className={`relative px-4 py-1.5 rounded-full text-[12px] uppercase tracking-[0.08em] font-medium transition-all duration-300 ${
+                      isActive
+                        ? "text-[#18202A] font-semibold bg-white/95 shadow-[0_0_16px_rgba(201,154,58,0.35),0_2px_8px_rgba(0,0,0,0.06)] border border-[#C99A3A]/60"
+                        : "text-[#77736B] hover:text-[#18202A] hover:bg-white/40 border border-transparent"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             {/* Desktop CTA */}
             <Link
               href="#contact"
-              className="hidden lg:flex btn-primary text-[13px] py-3 px-6"
+              className={`hidden lg:flex btn-primary text-[13px] py-3 px-6 transition-all duration-300 ${
+                activeSection === "contact"
+                  ? "shadow-[0_0_20px_rgba(201,154,58,0.4)] border-[#C99A3A]"
+                  : ""
+              }`}
             >
               Let's Talk
               <ArrowRight className="w-3.5 h-3.5 arrow-icon" />
@@ -112,20 +157,27 @@ export function Header() {
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col items-start justify-center h-full px-10 gap-2">
-          {navItems.map((item, i) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className="font-serif text-[40px] text-[#18202A] hover:text-[#77736B] transition-colors py-2"
-              style={{
-                transitionDelay: mobileOpen ? `${i * 60}ms` : "0ms",
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <div className="flex flex-col items-start justify-center h-full px-10 gap-3">
+          {navItems.map((item, i) => {
+            const isActive = activeSection === item.href.replace("#", "");
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`font-serif text-[38px] transition-all duration-300 py-1.5 ${
+                  isActive
+                    ? "text-[#18202A] font-medium translate-x-2"
+                    : "text-[#77736B] hover:text-[#18202A]"
+                }`}
+                style={{
+                  transitionDelay: mobileOpen ? `${i * 60}ms` : "0ms",
+                }}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <div className="mt-8 pt-8 border-t border-[#D8D4CB] w-full">
             <Link
               href="#contact"
