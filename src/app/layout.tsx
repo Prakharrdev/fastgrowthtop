@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-
-const dmSerif = DM_Serif_Display({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-});
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -27,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSerif.variable} ${inter.variable}`}>
-      <body className="antialiased selection:bg-[#C99A3A]/20 selection:text-[#18202A]">
+    <html lang="en" className={`${inter.variable}`}>
+      <body className="antialiased selection:bg-[#1261F5]/20 selection:text-[#0D1F3C]">
         {children}
       </body>
     </html>
