@@ -165,9 +165,6 @@ export function SiteAudit() {
     <section className="section-padding relative" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
         
-        {/* Top Divider */}
-        <div className="reveal divider mb-10 lg:mb-12" />
-
         {/* Section Header (Centered) */}
         <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-10">
           <div className="reveal mb-3">

@@ -37,9 +37,6 @@ export function Problem() {
     <section id="problem" className="section-padding" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
-        {/* Divider */}
-        <div className="reveal divider mb-10 lg:mb-14" />
-
         {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 mb-10 lg:mb-14">
           <div className="lg:col-span-7">

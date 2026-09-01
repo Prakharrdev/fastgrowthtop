@@ -101,9 +101,6 @@ export function Reviews() {
     <section id="reviews" className="section-padding" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
-        {/* Divider */}
-        <div className="reveal divider mb-10 lg:mb-14" />
-
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14 lg:mb-16">
           <div>

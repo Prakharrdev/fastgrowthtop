@@ -101,9 +101,6 @@ export function Header() {
               </div>
             </button>
           </div>
-
-          {/* Subtle separator */}
-          <div className={`h-[1px] transition-opacity duration-500 ${scrolled ? "bg-[#D8D4CB]/50 opacity-100" : "bg-[#D8D4CB]/30 opacity-100"}`} />
         </div>
       </header>
 
