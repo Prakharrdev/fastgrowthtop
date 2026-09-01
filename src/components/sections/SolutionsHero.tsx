@@ -1,10 +1,10 @@
 export function SolutionsHero() {
   return (
-    <section className="pt-[96px] pb-[48px] lg:pt-[140px] lg:pb-[64px] relative">
+    <section className="pt-[48px] pb-[28px] lg:pt-[64px] lg:pb-[36px] relative">
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
         {/* Divider */}
-        <div className="divider mb-20 lg:mb-24" />
+        <div className="divider mb-12 lg:mb-14" />
 
         {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-6 items-start">

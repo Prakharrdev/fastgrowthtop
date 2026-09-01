@@ -30,7 +30,7 @@ export function Contact() {
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
         {/* Divider */}
-        <div className="reveal divider mb-20 lg:mb-24" />
+        <div className="reveal divider mb-10 lg:mb-14" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20">
           {/* Left */}

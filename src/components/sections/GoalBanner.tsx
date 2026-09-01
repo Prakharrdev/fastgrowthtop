@@ -6,7 +6,7 @@ export function GoalBanner() {
   const ref = useScrollReveal();
 
   return (
-    <section className="pb-[96px] lg:pb-[140px]" ref={ref}>
+    <section className="py-[24px] lg:py-[36px]" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
         <div className="reveal flex items-center justify-center relative">
           {/* Left line */}

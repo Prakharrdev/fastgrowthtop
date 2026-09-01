@@ -8,11 +8,11 @@ export function Hero() {
   const ref = useScrollReveal();
 
   return (
-    <section id="hero" className="pt-[120px] pb-[64px] lg:pt-[140px] lg:pb-[80px]" ref={ref}>
+    <section id="hero" className="pt-[104px] pb-[48px] lg:pt-[124px] lg:pb-[64px]" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
         {/* Eyebrow */}
-        <div className="reveal mb-12 lg:mb-16">
+        <div className="reveal mb-6 lg:mb-8">
           <span className="label-eyebrow">Based in Traverse City, Michigan</span>
         </div>
 
@@ -21,18 +21,18 @@ export function Hero() {
 
           {/* Headline Area */}
           <div className="lg:col-span-7 flex flex-col items-start">
-            <h1 className="reveal text-hero mb-10 lg:mb-12">
+            <h1 className="reveal text-hero mb-6 lg:mb-8">
               Your website<br />
               should be bringing<br />
               you <span className="ochre-underline reveal">business</span>.
             </h1>
 
-            <p className="reveal reveal-delay-1 text-body-large max-w-[480px] mb-10 lg:mb-12">
+            <p className="reveal reveal-delay-1 text-body-large max-w-[480px] mb-8 lg:mb-10">
               If it isn't, I can help. I build websites, improve your visibility, generate more leads, and automate the busywork so you can focus on running your business.
             </p>
 
             {/* CTAs */}
-            <div className="reveal reveal-delay-2 flex flex-col sm:flex-row items-start gap-4 mb-16 lg:mb-20">
+            <div className="reveal reveal-delay-2 flex flex-col sm:flex-row items-start gap-4 mb-10 lg:mb-14">
               <a href="#contact" className="btn-primary">
                 Tell Me About Your Business
                 <ArrowRight className="w-4 h-4 arrow-icon" />

@@ -497,18 +497,38 @@ input:focus, textarea:focus {
 }
 
 /* ===================================================================
+   LENIS SMOOTH SCROLL
+   =================================================================== */
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ===================================================================
    SECTION SPACING
    =================================================================== */
 
 .section-padding {
-  padding-top: 96px;
-  padding-bottom: 96px;
+  padding-top: 56px;
+  padding-bottom: 56px;
 }
 
 @media (min-width: 1024px) {
   .section-padding {
-    padding-top: 140px;
-    padding-bottom: 140px;
+    padding-top: 80px;
+    padding-bottom: 80px;
   }
 }
 

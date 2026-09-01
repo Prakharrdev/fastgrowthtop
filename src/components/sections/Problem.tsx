@@ -38,12 +38,12 @@ export function Problem() {
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
         {/* Divider */}
-        <div className="reveal divider mb-20 lg:mb-24" />
+        <div className="reveal divider mb-10 lg:mb-14" />
 
         {/* Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 mb-16 lg:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 mb-10 lg:mb-14">
           <div className="lg:col-span-7">
-            <div className="reveal mb-5">
+            <div className="reveal mb-4">
               <span className="label-eyebrow">The Problem</span>
             </div>
             <h2 className="reveal reveal-delay-1 text-section-heading">
@@ -51,7 +51,7 @@ export function Problem() {
               isn't working.
             </h2>
           </div>
-          <div className="lg:col-span-5 lg:pt-12">
+          <div className="lg:col-span-5 lg:pt-8">
             <p className="reveal reveal-delay-2 text-body-large max-w-md">
               You know your business is great. But your website, marketing, or systems might be holding you back.
             </p>
@@ -59,7 +59,7 @@ export function Problem() {
         </div>
 
         {/* Problem Cards — 2×2 Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[#D8D4CB]/40 rounded-[var(--radius-lg)] overflow-hidden mb-20 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[#D8D4CB]/40 rounded-[var(--radius-lg)] overflow-hidden mb-12 stagger-children">
           {problems.map((problem) => (
             <div
               key={problem.number}

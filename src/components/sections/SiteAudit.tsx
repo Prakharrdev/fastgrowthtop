@@ -166,15 +166,15 @@ export function SiteAudit() {
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
         
         {/* Top Divider */}
-        <div className="reveal divider mb-20 lg:mb-24" />
+        <div className="reveal divider mb-10 lg:mb-12" />
 
         {/* Section Header (Centered) */}
-        <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-14">
-          <div className="reveal mb-4">
+        <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-10">
+          <div className="reveal mb-3">
             <span className="label-eyebrow">Instant Website Audit</span>
           </div>
 
-          <h2 className="reveal reveal-delay-1 text-section-heading mb-6">
+          <h2 className="reveal reveal-delay-1 text-section-heading mb-5">
             Is your website losing clients before it even loads?
           </h2>
 
