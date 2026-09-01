@@ -88,7 +88,7 @@ export function Problem() {
           <p className="font-serif text-[22px] text-[#18202A] mb-3">
             That's where I come in.
           </p>
-          <ArrowDown className="w-4 h-4 text-[#C99A3A] animate-bounce" />
+          <ArrowDown className="w-4 h-4 text-[#C99A3A]" />
         </div>
       </div>
     </section>

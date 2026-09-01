@@ -42,10 +42,9 @@ export function SolutionCard({ number, icon: Icon, title, description, features,
       <div className="accent-line mb-6" />
 
       {/* Features */}
-      <ul className="flex flex-col gap-3 mt-auto w-full">
+      <ul className="flex flex-col gap-2 mt-auto w-full">
         {features.map((feature, i) => (
-          <li key={i} className="flex items-start gap-3">
-            <div className="w-[5px] h-[5px] rounded-full bg-[#D8D4CB] shrink-0 mt-[7px]" />
+          <li key={i} className="flex items-start">
             <span className="text-[14px] text-[#18202A] font-medium leading-[1.45]">
               {feature}
             </span>

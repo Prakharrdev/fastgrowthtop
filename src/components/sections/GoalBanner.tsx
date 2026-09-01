@@ -14,7 +14,6 @@ export function GoalBanner() {
 
           {/* Content */}
           <div className="flex flex-col items-center text-center max-w-[560px] bg-[#F7F5F0] px-6 relative z-10">
-            <div className="w-[3px] h-[3px] rounded-full bg-[#C99A3A] mb-5" />
             <h2 className="font-serif text-[22px] lg:text-[26px] text-[#18202A] leading-[1.25] mb-3">
               The goal is simple: more customers and less stress.
             </h2>

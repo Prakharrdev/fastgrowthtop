@@ -170,8 +170,7 @@ export function SiteAudit() {
 
         {/* Section Header (Centered) */}
         <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-14">
-          <div className="reveal flex items-center justify-center gap-2.5 mb-4">
-            <div className="w-[5px] h-[5px] rounded-full bg-[#C99A3A]" />
+          <div className="reveal mb-4">
             <span className="label-eyebrow">Instant Website Audit</span>
           </div>
 
@@ -255,8 +254,8 @@ export function SiteAudit() {
         {/* Loading Progress State */}
         {isLoading && (
           <div className="max-w-[680px] mx-auto my-12 p-10 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB] text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#FAF5EC] text-[#C99A3A] mb-5">
-              <Zap className="w-6 h-6" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-md)] bg-[#F0EDE6] text-[#18202A] mb-5">
+              <Zap className="w-6 h-6 text-[#C99A3A]" />
             </div>
             <h3 className="font-serif text-[24px] text-[#18202A] mb-3">
               Auditing {inputUrl}...
@@ -337,9 +336,9 @@ export function SiteAudit() {
                   </h3>
                 </div>
                 <div className="flex items-center gap-4 text-[13px] text-[#77736B]">
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#2E7D32]" /> 90-100</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#C99A3A]" /> 50-89</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#B9684A]" /> 0-49</span>
+                  <span className="px-2 py-0.5 rounded bg-[#EDF7EE] text-[#226327] font-medium border border-[#CBE5CF]">90-100</span>
+                  <span className="px-2 py-0.5 rounded bg-[#FAF5EC] text-[#8C661A] font-medium border border-[#EBD8B2]">50-89</span>
+                  <span className="px-2 py-0.5 rounded bg-[#FAF0EC] text-[#9A4C32] font-medium border border-[#EBD0C6]">0-49</span>
                 </div>
               </div>
 
@@ -663,8 +662,7 @@ export function SiteAudit() {
             {/* 05. Conversion Call to Action Box */}
             <div className="p-8 md:p-12 rounded-[var(--radius-md)] bg-[#18202A] text-[#F7F5F0] relative overflow-hidden border border-[#2A3240]">
               <div className="relative z-10 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[rgba(201,154,58,0.15)] border border-[#C99A3A]/30 text-[#E5BF67] text-[13px] font-semibold mb-4">
-                  <div className="w-2 h-2 rounded-full bg-[#C99A3A]" />
+                <div className="inline-flex items-center px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[rgba(201,154,58,0.15)] border border-[#C99A3A]/30 text-[#E5BF67] text-[13px] font-semibold mb-4">
                   <span>Turn These Audits Into Growth</span>
                 </div>
 

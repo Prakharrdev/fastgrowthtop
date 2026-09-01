@@ -50,12 +50,9 @@ export function Contact() {
             {/* Trust Points */}
             <div className="flex flex-col gap-6 mb-12">
               {trustPoints.map((item, i) => (
-                <div key={item.title} className={`reveal reveal-delay-${i + 1} flex items-start gap-4`}>
-                  <div className="w-[5px] h-[5px] rounded-full bg-[#C99A3A] shrink-0 mt-[8px]" />
-                  <div>
-                    <h4 className="text-[15px] font-semibold text-[#18202A] mb-0.5">{item.title}</h4>
-                    <p className="text-[14px] text-[#77736B] leading-[1.55]">{item.desc}</p>
-                  </div>
+                <div key={item.title} className={`reveal reveal-delay-${i + 1} flex flex-col`}>
+                  <h4 className="text-[15px] font-semibold text-[#18202A] mb-0.5">{item.title}</h4>
+                  <p className="text-[14px] text-[#77736B] leading-[1.55]">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -82,7 +79,6 @@ export function Contact() {
             <div className="reveal bg-[#FFFDF9] border border-[#E8E5DE] rounded-[var(--radius-lg)] p-8 lg:p-10">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center text-center py-16">
-                  <div className="w-[3px] h-[3px] rounded-full bg-[#C99A3A] mb-6" />
                   <h3 className="font-serif text-[28px] text-[#18202A] mb-3">Message sent.</h3>
                   <p className="text-body max-w-sm">
                     Thank you for reaching out. I'll review your message and get back to you soon.

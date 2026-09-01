@@ -28,10 +28,7 @@ export function About() {
           {/* Content */}
           <div className="lg:col-span-6 xl:col-span-7">
             <div className="reveal mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-[3px] h-[3px] rounded-full bg-[#C99A3A]" />
-                <span className="label-eyebrow">Based in Traverse City, Michigan</span>
-              </div>
+              <span className="label-eyebrow">Based in Traverse City, Michigan</span>
             </div>
 
             <h2 className="reveal reveal-delay-1 text-section-heading mb-8">
@@ -74,8 +71,7 @@ export function About() {
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
             </div>
-            <div className="flex items-center gap-2 mt-4">
-              <div className="w-[3px] h-[3px] rounded-full bg-[#D8D4CB]" />
+            <div className="mt-4">
               <p className="text-[12px] text-[#9A968E] tracking-[0.04em] italic">
                 Traverse City, Michigan — Where I'm based and inspired every day.
               </p>

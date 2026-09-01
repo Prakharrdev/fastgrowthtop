@@ -13,10 +13,7 @@ export function Hero() {
 
         {/* Eyebrow */}
         <div className="reveal mb-12 lg:mb-16">
-          <div className="flex items-center gap-3">
-            <div className="w-[3px] h-[3px] rounded-full bg-[#C99A3A]" />
-            <span className="label-eyebrow">Based in Traverse City, Michigan</span>
-          </div>
+          <span className="label-eyebrow">Based in Traverse City, Michigan</span>
         </div>
 
         {/* Main Grid */}
@@ -76,8 +73,7 @@ export function Hero() {
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
             </div>
-            <div className="flex items-center gap-2 mt-4">
-              <div className="w-[3px] h-[3px] rounded-full bg-[#D8D4CB]" />
+            <div className="mt-4">
               <p className="text-[12px] text-[#9A968E] tracking-[0.04em]">
                 Traverse City, Michigan
               </p>
