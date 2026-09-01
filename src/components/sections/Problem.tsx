@@ -1,33 +1,29 @@
 "use client";
 
-import { ArrowDown, Phone, Eye, DollarSign, Clock } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const problems = [
   {
     number: "01",
-    icon: Phone,
     title: "Your website isn't getting calls.",
     description:
       "People visit, but don't take the next step. Your website might be confusing, slow, or simply not built to convert.",
   },
   {
     number: "02",
-    icon: Eye,
     title: "You're hard to find online.",
     description:
       "When people search for what you offer, your competitors show up before you do.",
   },
   {
     number: "03",
-    icon: DollarSign,
     title: "You're spending money without knowing what works.",
     description:
       "Ads, SEO, social media — you're investing, but don't have a clear picture of what's actually bringing in customers.",
   },
   {
     number: "04",
-    icon: Clock,
     title: "You're doing everything manually.",
     description:
       "Following up with leads, sending emails, managing tasks — it's slowing you down and taking time you don't have.",
@@ -38,62 +34,61 @@ export function Problem() {
   const ref = useScrollReveal();
 
   return (
-    <section id="problem" className="section-padding bg-[#FBFCFF]" ref={ref}>
-      <div className="max-w-[1360px] mx-auto px-5 md:px-8 lg:px-12">
-        {/* Eyebrow */}
-        <div className="reveal mb-4">
-          <span className="label-eyebrow">THE PROBLEM</span>
+    <section id="problem" className="section-padding" ref={ref}>
+      <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
+
+        {/* Divider */}
+        <div className="reveal divider mb-20 lg:mb-24" />
+
+        {/* Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 mb-16 lg:mb-20">
+          <div className="lg:col-span-7">
+            <div className="reveal mb-5">
+              <span className="label-eyebrow">The Problem</span>
+            </div>
+            <h2 className="reveal reveal-delay-1 text-section-heading">
+              Something<br />
+              isn't working.
+            </h2>
+          </div>
+          <div className="lg:col-span-5 lg:pt-12">
+            <p className="reveal reveal-delay-2 text-body-large max-w-md">
+              You know your business is great. But your website, marketing, or systems might be holding you back.
+            </p>
+          </div>
         </div>
 
-        {/* Heading */}
-        <div className="reveal reveal-delay-1 mb-6">
-          <h2 className="text-section-heading">
-            Something<br />
-            isn't working<span className="text-[#1261F5]">.</span>
-          </h2>
-        </div>
+        {/* Problem Cards — 2×2 Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[#D8D4CB]/40 rounded-[var(--radius-lg)] overflow-hidden mb-20 stagger-children">
+          {problems.map((problem) => (
+            <div
+              key={problem.number}
+              className="reveal bg-[#FFFDF9] p-8 lg:p-10 group"
+            >
+              {/* Number */}
+              <span className="text-[12px] font-semibold text-[#9A968E] tracking-[0.14em] uppercase block mb-6">
+                {problem.number}
+              </span>
 
-        {/* Supporting copy */}
-        <p className="reveal reveal-delay-2 text-body-large max-w-2xl mb-16">
-          You know your business is great. But your website, marketing, or systems might be holding you back. Here are some common roadblocks I help solve.
-        </p>
+              {/* Title — serif for emotion */}
+              <h3 className="font-serif text-[24px] lg:text-[28px] text-[#18202A] leading-[1.15] mb-4">
+                {problem.title}
+              </h3>
 
-        {/* Problem Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-5 mb-16">
-          {problems.map((problem, index) => {
-            const Icon = problem.icon;
-            return (
-              <div
-                key={problem.number}
-                className={`reveal reveal-delay-${index + 1} bg-white border border-[#E2E7F0] rounded-lg p-7 lg:p-8 card-hover`}
-              >
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 bg-[#F1F5FF] rounded-xl flex items-center justify-center shrink-0">
-                    <Icon className="w-6 h-6 text-[#1261F5]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-[13px] font-bold text-[#1261F5] block mb-2">
-                      {problem.number}
-                    </span>
-                    <h3 className="text-[20px] font-bold text-[#0D1F3C] mb-3 tracking-tight leading-tight">
-                      {problem.title}
-                    </h3>
-                    <p className="text-[15px] text-[#344563] leading-[1.65]">
-                      {problem.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              {/* Description — sans for information */}
+              <p className="text-[15px] text-[#77736B] leading-[1.6]">
+                {problem.description}
+              </p>
+            </div>
+          ))}
         </div>
 
         {/* Transition */}
         <div className="reveal flex flex-col items-center text-center">
-          <p className="text-[20px] font-bold text-[#0D1F3C] mb-2">
+          <p className="font-serif text-[22px] text-[#18202A] mb-3">
             That's where I come in.
           </p>
-          <ArrowDown className="w-5 h-5 text-[#1261F5] animate-bounce" />
+          <ArrowDown className="w-4 h-4 text-[#C99A3A] animate-bounce" />
         </div>
       </div>
     </section>

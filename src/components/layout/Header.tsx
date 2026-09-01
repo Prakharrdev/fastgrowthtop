@@ -24,115 +24,121 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-[100] transition-all duration-300 ${
+        className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-[12px] border-b border-[#EDF0F5] shadow-sm"
-            : "bg-white border-b border-[#EDF0F5]"
+            ? "bg-[#F7F5F0]/90 backdrop-blur-[16px] shadow-sm"
+            : "bg-[#F7F5F0]"
         }`}
       >
-        <div className="max-w-[1360px] mx-auto px-5 md:px-8 lg:px-12 h-[80px] lg:h-[88px] flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            {/* Logo Mark */}
-            <div className="w-9 h-9 bg-[#1261F5] rounded-md flex items-center justify-center shrink-0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 10.5C15 9.5 14 9 12 9C10 9 9 9.5 9 10.5C9 12.5 15 11.5 15 13.5C15 14.5 14 15 12 15C10 15 9 14.5 9 13.5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </div>
-            {/* Logo Text */}
-            <div className="flex flex-col">
-              <span className="text-[18px] font-bold text-[#0D1F3C] leading-none tracking-tight">Schrader.co</span>
-              <span className="text-[11px] text-[#68758C] font-medium mt-0.5 hidden sm:block">Digital Marketing & Automation</span>
-            </div>
-          </Link>
+        <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
+          <div className="flex items-center justify-between h-[72px] lg:h-[80px]">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <span className="font-serif text-[22px] text-[#18202A] tracking-tight transition-opacity group-hover:opacity-70">
+                Schrader
+              </span>
+              <span className="text-[12px] text-[#77736B] font-medium tracking-[0.02em] hidden sm:block">
+                Digital Marketing & Automation
+              </span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-10">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-[15px] font-medium text-[#0D1F3C] hover:text-[#1261F5] transition-colors relative py-2"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-[13px] font-medium text-[#77736B] hover:text-[#18202A] transition-colors duration-300 uppercase tracking-[0.08em]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          {/* CTA */}
-          <Link
-            href="#contact"
-            className="hidden lg:flex items-center justify-center gap-2 bg-[#1261F5] hover:bg-[#0756E8] text-white px-6 py-3 rounded-lg text-[14px] font-semibold transition-colors group"
-          >
-            Let's Talk
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+            {/* Desktop CTA */}
+            <Link
+              href="#contact"
+              className="hidden lg:flex btn-primary text-[13px] py-3 px-6"
+            >
+              Let's Talk
+              <ArrowRight className="w-3.5 h-3.5 arrow-icon" />
+            </Link>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden flex flex-col gap-[5px] p-2 relative z-[110]"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
-            <span
-              className={`w-6 h-[2px] bg-[#0D1F3C] rounded-full transition-all duration-300 ${
-                mobileOpen ? "rotate-45 translate-y-[7px]" : ""
-              }`}
-            />
-            <span
-              className={`w-6 h-[2px] bg-[#0D1F3C] rounded-full transition-all duration-300 ${
-                mobileOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`w-6 h-[2px] bg-[#0D1F3C] rounded-full transition-all duration-300 ${
-                mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""
-              }`}
-            />
-          </button>
+            {/* Mobile burger */}
+            <button
+              className="lg:hidden relative w-8 h-8 flex items-center justify-center z-[110]"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            >
+              <div className="flex flex-col gap-[6px]">
+                <span
+                  className={`block w-6 h-[1.5px] bg-[#18202A] rounded-full transition-all duration-300 ${
+                    mobileOpen ? "rotate-45 translate-y-[7.5px]" : ""
+                  }`}
+                />
+                <span
+                  className={`block w-6 h-[1.5px] bg-[#18202A] rounded-full transition-all duration-300 ${
+                    mobileOpen ? "opacity-0" : ""
+                  }`}
+                />
+                <span
+                  className={`block w-6 h-[1.5px] bg-[#18202A] rounded-full transition-all duration-300 ${
+                    mobileOpen ? "-rotate-45 -translate-y-[7.5px]" : ""
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+
+          {/* Subtle separator */}
+          <div className={`h-[1px] transition-opacity duration-500 ${scrolled ? "bg-[#D8D4CB]/50 opacity-100" : "bg-[#D8D4CB]/30 opacity-100"}`} />
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Overlay */}
       <div
-        className={`fixed inset-0 z-[90] bg-white transition-all duration-300 lg:hidden ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-[90] bg-[#F7F5F0] transition-all duration-500 lg:hidden ${
+          mobileOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {navItems.map((item) => (
+        <div className="flex flex-col items-start justify-center h-full px-10 gap-2">
+          {navItems.map((item, i) => (
             <Link
               key={item.label}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="text-[28px] font-bold text-[#0D1F3C] hover:text-[#1261F5] transition-colors"
+              className="font-serif text-[40px] text-[#18202A] hover:text-[#77736B] transition-colors py-2"
+              style={{
+                transitionDelay: mobileOpen ? `${i * 60}ms` : "0ms",
+              }}
             >
               {item.label}
             </Link>
           ))}
-          <Link
-            href="#contact"
-            onClick={() => setMobileOpen(false)}
-            className="mt-4 inline-flex items-center gap-2 bg-[#1261F5] hover:bg-[#0756E8] text-white px-8 py-4 rounded-lg text-[16px] font-semibold transition-all group"
-          >
-            Let's Talk
-            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <div className="mt-8 pt-8 border-t border-[#D8D4CB] w-full">
+            <Link
+              href="#contact"
+              onClick={() => setMobileOpen(false)}
+              className="btn-primary"
+            >
+              Let's Talk
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </>

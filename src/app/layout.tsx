@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, DM_Serif_Display } from "next/font/google";
+import { LenisProvider } from "@/components/providers/LenisProvider";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const dmSerif = DM_Serif_Display({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -20,9 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
-      <body className="antialiased selection:bg-[#1261F5]/20 selection:text-[#0D1F3C]">
-        {children}
+    <html lang="en" className={`${inter.variable} ${dmSerif.variable}`}>
+      <body className="antialiased">
+        <LenisProvider>
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );

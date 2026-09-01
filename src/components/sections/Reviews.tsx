@@ -44,7 +44,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`w-4 h-4 ${i < rating ? "fill-[#F59E0B] text-[#F59E0B]" : "text-[#E2E7F0]"}`}
+          className={`w-3.5 h-3.5 ${i < rating ? "fill-[#C99A3A] text-[#C99A3A]" : "text-[#D8D4CB]"}`}
         />
       ))}
     </div>
@@ -53,7 +53,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function GoogleLogo() {
   return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -91,95 +91,82 @@ export function Reviews() {
   } = useCarousel({
     totalItems: reviews.length,
     itemsPerView,
-    gap: 24,
+    gap: 20,
   });
 
   const cardWidthPercent = 100 / itemsPerView;
   const translateX = -(currentIndex * cardWidthPercent);
 
   return (
-    <section id="reviews" className="section-padding bg-white" ref={ref}>
-      <div className="max-w-[1360px] mx-auto px-5 md:px-8 lg:px-12">
+    <section id="reviews" className="section-padding" ref={ref}>
+      <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
+
+        {/* Divider */}
+        <div className="reveal divider mb-20 lg:mb-24" />
+
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14 lg:mb-16">
           <div>
-            <div className="reveal mb-4">
-              <span className="label-eyebrow">GOOGLE REVIEWS</span>
+            <div className="reveal mb-5">
+              <span className="label-eyebrow">Google Reviews</span>
             </div>
             <h2 className="reveal reveal-delay-1 text-section-heading mb-4">
-              What my clients say<span className="text-[#1261F5]">.</span>
+              What my clients say.
             </h2>
-            <p className="reveal reveal-delay-2 text-body-large max-w-lg">
-              Real feedback from real businesses.
-              I'm proud of the results we've achieved together.
+            <p className="reveal reveal-delay-2 text-body-large max-w-md">
+              Real feedback from real businesses. I'm proud of the results we've achieved together.
             </p>
           </div>
 
           {/* Google Rating Badge */}
-          <div className="reveal flex items-center gap-4 bg-white border border-[#E2E7F0] rounded-xl px-6 py-4 shadow-card-subtle">
+          <div className="reveal bg-[#FFFDF9] border border-[#E8E5DE] rounded-[var(--radius-lg)] px-6 py-4 flex items-center gap-4">
             <GoogleLogo />
             <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[22px] font-bold text-[#0D1F3C]">5.0</span>
-                <div className="flex items-center gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
-                  ))}
-                </div>
+              <div className="flex items-center gap-2.5 mb-0.5">
+                <span className="font-serif text-[24px] text-[#18202A]">5.0</span>
+                <StarRating rating={5} />
               </div>
-              <span className="text-[13px] text-[#68758C]">Based on Google Reviews</span>
+              <span className="text-[12px] text-[#9A968E]">Based on Google Reviews</span>
             </div>
           </div>
         </div>
 
-        {/* Review Carousel */}
-        <div
-          className="reveal carousel-container mb-10"
-          ref={containerRef}
-          {...handlers}
-        >
+        {/* Carousel */}
+        <div className="reveal carousel-container mb-10" ref={containerRef} {...handlers}>
           <div
             className="carousel-track"
-            style={{
-              transform: `translateX(${translateX}%)`,
-              gap: "24px",
-            }}
+            style={{ transform: `translateX(${translateX}%)`, gap: "20px" }}
           >
             {reviews.map((review, i) => (
               <div
                 key={i}
                 className="flex-shrink-0"
-                style={{ width: `calc(${cardWidthPercent}% - ${(24 * (itemsPerView - 1)) / itemsPerView}px)` }}
+                style={{ width: `calc(${cardWidthPercent}% - ${(20 * (itemsPerView - 1)) / itemsPerView}px)` }}
               >
-                <div className="bg-white border border-[#E2E7F0] rounded-lg p-7 h-full flex flex-col card-hover">
+                <div className="card p-7 h-full flex flex-col">
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between mb-5">
                     <div>
-                      <h4 className="text-[16px] font-bold text-[#0D1F3C]">
-                        {review.name}
-                      </h4>
-                      <span className="text-[13px] text-[#68758C]">{review.business}</span>
+                      <h4 className="text-[15px] font-semibold text-[#18202A]">{review.name}</h4>
+                      <span className="text-[12px] text-[#9A968E]">{review.business}</span>
                     </div>
                     <GoogleLogo />
                   </div>
 
                   {/* Stars */}
-                  <div className="mb-4">
+                  <div className="mb-5">
                     <StarRating rating={review.rating} />
                   </div>
 
-                  {/* Review text */}
-                  <p className="text-[15px] text-[#344563] leading-[1.65] flex-grow mb-5">
+                  {/* Text */}
+                  <p className="text-[14px] text-[#77736B] leading-[1.6] flex-grow mb-6">
                     "{review.text}"
                   </p>
 
                   {/* Link */}
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#1261F5] hover:gap-2.5 transition-all mt-auto"
-                  >
+                  <a href="#" className="link-arrow text-[12px] text-[#9A968E] hover:text-[#18202A] mt-auto">
                     View on Google
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-3 h-3 arrow-icon" />
                   </a>
                 </div>
               </div>
@@ -187,7 +174,7 @@ export function Reviews() {
           </div>
         </div>
 
-        {/* Navigation */}
+        {/* Nav */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {Array.from({ length: totalPages }).map((_, i) => (
@@ -195,42 +182,28 @@ export function Reviews() {
                 key={i}
                 onClick={() => goToPage(i)}
                 className={`carousel-dot ${i === currentPage ? "active" : ""}`}
-                aria-label={`Go to review group ${i + 1}`}
+                aria-label={`Group ${i + 1}`}
               />
             ))}
           </div>
-
           <div className="flex items-center gap-3">
-            <button
-              onClick={prev}
-              disabled={!canGoPrev}
-              className="carousel-arrow"
-              aria-label="Previous reviews"
-            >
-              <ChevronLeft className="w-5 h-5" />
+            <button onClick={prev} disabled={!canGoPrev} className="carousel-arrow" aria-label="Previous">
+              <ChevronLeft className="w-4 h-4" />
             </button>
-            <button
-              onClick={next}
-              disabled={!canGoNext}
-              className="carousel-arrow"
-              aria-label="Next reviews"
-            >
-              <ChevronRight className="w-5 h-5" />
+            <button onClick={next} disabled={!canGoNext} className="carousel-arrow" aria-label="Next">
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* CTA Strip */}
-        <div className="reveal mt-20 bg-[#F3F7FF] rounded-xl py-10 px-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
-          <p className="text-[20px] font-bold text-[#0D1F3C]">
+        <div className="reveal mt-20 bg-[#F0EDE6]/60 rounded-[var(--radius-lg)] py-10 px-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
+          <p className="font-serif text-[22px] text-[#18202A]">
             Ready to get results like these?
           </p>
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 bg-[#1261F5] hover:bg-[#0756E8] text-white px-7 py-3.5 rounded-lg text-[15px] font-semibold transition-all group"
-          >
+          <a href="#contact" className="btn-primary text-[13px]">
             Let's Talk
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="w-3.5 h-3.5 arrow-icon" />
           </a>
         </div>
       </div>
