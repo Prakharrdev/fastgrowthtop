@@ -104,9 +104,7 @@ export function Reviews() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14 lg:mb-16">
           <div>
-            <div className="reveal mb-5">
-              <span className="label-eyebrow">Google Reviews</span>
-            </div>
+
             <h2 className="reveal reveal-delay-1 text-section-heading mb-4">
               What my clients say.
             </h2>

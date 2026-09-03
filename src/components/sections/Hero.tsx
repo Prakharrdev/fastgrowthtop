@@ -11,10 +11,7 @@ export function Hero() {
     <section id="hero" className="pt-[104px] pb-[48px] lg:pt-[124px] lg:pb-[64px]" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
-        {/* Eyebrow */}
-        <div className="reveal mb-6 lg:mb-8">
-          <span className="label-eyebrow">Based in Traverse City, Michigan</span>
-        </div>
+
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-start">

@@ -32,9 +32,7 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20">
           {/* Left */}
           <div className="lg:col-span-5">
-            <div className="reveal mb-5">
-              <span className="label-eyebrow">Let's Connect</span>
-            </div>
+
 
             <h2 className="reveal reveal-delay-1 text-section-heading mb-6">
               Let's build something<br />great together.

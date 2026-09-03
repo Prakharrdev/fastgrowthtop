@@ -246,6 +246,16 @@ export function SiteAudit() {
               </div>
             )}
           </form>
+
+          {/* Goal Statement 1-Liner */}
+          <div className="mt-10 pt-7 border-t border-[#D8D4CB]/60 text-center max-w-[620px] w-full mx-auto">
+            <p className="font-serif text-[21px] md:text-[23px] text-[#18202A] leading-snug mb-1.5 font-medium">
+              The goal is simple: more customers and less stress.
+            </p>
+            <p className="text-[15px] md:text-[16px] text-[#77736B] leading-[1.6]">
+              I handle the digital so you can focus on your business.
+            </p>
+          </div>
         </div>
 
         {/* Loading Progress State */}
@@ -681,7 +691,7 @@ export function SiteAudit() {
                   </a>
 
                   <span className="text-[14px] text-[#9A968E] sm:ml-2">
-                    ✓ Direct 1-on-1 review • No account managers
+                    ✓ Direct 1-on-1 review • Tailored strategy
                   </span>
                 </div>
               </div>

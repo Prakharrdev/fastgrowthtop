@@ -1,9 +1,5 @@
 import { Header } from "@/components/layout/Header";
 import { Hero } from "@/components/sections/Hero";
-import { Problem } from "@/components/sections/Problem";
-import { SolutionsHero } from "@/components/sections/SolutionsHero";
-import { SolutionsGrid } from "@/components/sections/SolutionsGrid";
-import { GoalBanner } from "@/components/sections/GoalBanner";
 import { SiteAudit } from "@/components/sections/SiteAudit";
 import { RecentWork } from "@/components/sections/RecentWork";
 import { About } from "@/components/sections/About";
@@ -19,14 +15,8 @@ export default function Home() {
         {/* 01 — Hero */}
         <Hero />
 
-        {/* 02 — The Problem */}
-        <Problem />
-
-        {/* 03 — The Solution */}
-        <div id="solutions">
-          <SolutionsHero />
-          <SolutionsGrid />
-          <GoalBanner />
+        {/* 02 — Audit */}
+        <div id="audit">
           <SiteAudit />
         </div>
 

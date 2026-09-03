@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const navItems = [
-  { label: "Solutions", href: "#solutions" },
+  { label: "Audit", href: "#audit" },
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Reviews", href: "#reviews" },
@@ -33,7 +33,7 @@ export function Header() {
         return;
       }
 
-      const sectionIds = ["solutions", "work", "about", "reviews", "contact"];
+      const sectionIds = ["audit", "work", "about", "reviews", "contact"];
       let current = "";
 
       for (const id of sectionIds) {
