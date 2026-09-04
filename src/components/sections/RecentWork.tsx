@@ -31,9 +31,6 @@ export function RecentWork() {
   const headingLine2Ref = useRef<HTMLSpanElement>(null);
   const headingItalicRef = useRef<HTMLSpanElement>(null);
   const introParagraphRef = useRef<HTMLParagraphElement>(null);
-  const arrowNoteTextRef = useRef<HTMLSpanElement>(null);
-  const arrowPathRef = useRef<SVGPathElement>(null);
-  const arrowHeadRef = useRef<SVGPathElement>(null);
   const counterNumberRef = useRef<HTMLDivElement>(null);
   const projectTitleRef = useRef<HTMLHeadingElement>(null);
   const projectCategoryRef = useRef<HTMLDivElement>(null);
@@ -70,123 +67,46 @@ export function RecentWork() {
         return;
       }
 
-      const yExit = direction === "next" ? -14 : 14;
-      const yEnter = direction === "next" ? 18 : -18;
-      const pills = servicePillsRef.current?.children;
+      // Collect strictly what is changing:
+      // Category tag, project title, narrative description, service pills, and counter number
+      const changingElements = [
+        projectCategoryRef.current,
+        projectTitleRef.current,
+        projectDescRef.current,
+        servicePillsRef.current,
+        counterNumberRef.current,
+      ].filter(Boolean);
 
-      // Phase 1: Animate current text elements out cleanly
-      const exitTl = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
+      // Phase 1: Clean fade out IN PLACE (no up/down movement, elements stay in place)
+      gsap.to(changingElements, {
+        opacity: 0,
+        duration: 0.18,
+        ease: "power2.inOut",
         onComplete: () => {
-          // Switch state at the bottom of the exit
+          // Switch state while elements are invisible
           setActiveIndex(targetIndex);
 
-          // Phase 2: Animate new project details in with staggered sequence
-          const enterTl = gsap.timeline({
-            defaults: { ease: "power3.out" },
-            onComplete: () => {
-              isTransitioningRef.current = false;
+          // Phase 2: Fade in from left to right smoothly
+          gsap.fromTo(
+            changingElements,
+            {
+              opacity: 0,
+              x: -16,
             },
-          });
-
-          // Animate sliding counter number
-          if (counterNumberRef.current) {
-            enterTl.fromTo(
-              counterNumberRef.current,
-              { yPercent: yEnter * 5, opacity: 0 },
-              { yPercent: 0, opacity: 1, duration: 0.45 },
-              0
-            );
-          }
-
-          // Animate title upward
-          if (projectTitleRef.current) {
-            enterTl.fromTo(
-              projectTitleRef.current,
-              { y: yEnter, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.55 },
-              0.05
-            );
-          }
-
-          // Animate category tag
-          if (projectCategoryRef.current) {
-            enterTl.fromTo(
-              projectCategoryRef.current,
-              { y: 8, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.4 },
-              0.1
-            );
-          }
-
-          // Animate narrative description
-          if (projectDescRef.current) {
-            enterTl.fromTo(
-              projectDescRef.current,
-              { y: 10, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5 },
-              0.12
-            );
-          }
-
-          // Animate service pills stagger
-          if (servicePillsRef.current && pills) {
-            enterTl.fromTo(
-              servicePillsRef.current.children,
-              { y: 8, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 },
-              0.18
-            );
-          }
-
-          // Subtle CTA fade
-          if (ctaContainerRef.current) {
-            enterTl.fromTo(
-              ctaContainerRef.current,
-              { opacity: 0.7, y: 4 },
-              { opacity: 1, y: 0, duration: 0.35 },
-              0.2
-            );
-          }
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.32,
+              stagger: 0.035,
+              ease: "power2.out",
+              clearProps: "transform",
+              onComplete: () => {
+                isTransitioningRef.current = false;
+              },
+            }
+          );
         },
       });
-
-      // Exit animations
-      if (counterNumberRef.current) {
-        exitTl.to(
-          counterNumberRef.current,
-          { yPercent: yExit * 5, opacity: 0, duration: 0.22 },
-          0
-        );
-      }
-      if (projectTitleRef.current) {
-        exitTl.to(
-          projectTitleRef.current,
-          { y: yExit, opacity: 0, duration: 0.24 },
-          0
-        );
-      }
-      if (projectCategoryRef.current) {
-        exitTl.to(
-          projectCategoryRef.current,
-          { opacity: 0, duration: 0.18 },
-          0.02
-        );
-      }
-      if (projectDescRef.current) {
-        exitTl.to(
-          projectDescRef.current,
-          { opacity: 0, duration: 0.2 },
-          0.02
-        );
-      }
-      if (pills && pills.length > 0) {
-        exitTl.to(
-          pills,
-          { opacity: 0, y: 4, duration: 0.18, stagger: 0.03 },
-          0.04
-        );
-      }
     },
     [activeIndex]
   );
@@ -230,23 +150,6 @@ export function RecentWork() {
     // Check reduced motion preference
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
-
-    // Prepare SVG curved arrow path lengths
-    let arrowLength = 120;
-    if (arrowPathRef.current) {
-      try {
-        arrowLength = arrowPathRef.current.getTotalLength();
-        gsap.set(arrowPathRef.current, {
-          strokeDasharray: arrowLength,
-          strokeDashoffset: arrowLength,
-        });
-      } catch {
-        // Fallback for older SVG support
-      }
-    }
-    if (arrowHeadRef.current) {
-      gsap.set(arrowHeadRef.current, { opacity: 0 });
-    }
 
     const ctx = gsap.context(() => {
       const entranceTl = gsap.timeline({
@@ -295,30 +198,6 @@ export function RecentWork() {
           { y: 22, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.65 },
           0.3
-        );
-      }
-
-      // Handwritten Note and Sketched Arrow Animation (Section 19)
-      if (arrowNoteTextRef.current) {
-        entranceTl.fromTo(
-          arrowNoteTextRef.current,
-          { opacity: 0, y: 6 },
-          { opacity: 0.95, y: 0, duration: 0.4 },
-          0.4
-        );
-      }
-      if (arrowPathRef.current) {
-        entranceTl.to(
-          arrowPathRef.current,
-          { strokeDashoffset: 0, duration: 0.65, ease: "power2.out" },
-          0.55
-        );
-      }
-      if (arrowHeadRef.current) {
-        entranceTl.to(
-          arrowHeadRef.current,
-          { opacity: 1, duration: 0.25 },
-          1.1
         );
       }
 
@@ -411,72 +290,39 @@ export function RecentWork() {
       onTouchEnd={handleTouchEnd}
       className="relative flex flex-col justify-between py-8 sm:py-12 lg:py-16 bg-[#F3E9DC] overflow-hidden"
     >
-      <div className="w-full max-w-[1380px] mx-auto px-5 sm:px-8 md:px-12 flex flex-col flex-grow justify-between">
+      <div className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 md:px-12 lg:px-14 flex flex-col flex-grow justify-between">
         {/* ========================================================
-            HEADER ROW: Section Title + Intro + Sketched Annotation
+            HEADER ROW: Section Title + Intro
            ======================================================== */}
-        <div className="relative mb-6 sm:mb-8 lg:mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-          <div className="max-w-xl">
-            {/* Masked Line-by-Line Headline Reveal (Section 5) */}
-            <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.04] text-[#5E3023] mb-3 tracking-tight">
-              <span className="block overflow-hidden pb-1">
-                <span ref={headingLine1Ref} className="inline-block will-change-transform">
-                  Websites
-                </span>
+        <div className="relative mb-6 sm:mb-8 lg:mb-10 max-w-2xl">
+          {/* Masked Line-by-Line Headline Reveal (Section 5) */}
+          <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.04] text-[#5E3023] mb-3 tracking-tight">
+            <span className="block overflow-hidden pb-1">
+              <span ref={headingLine1Ref} className="inline-block will-change-transform">
+                Websites
               </span>
-              <span className="block overflow-hidden">
-                <span ref={headingLine2Ref} className="inline-block will-change-transform">
-                  Built for{" "}
-                  <span
-                    ref={headingItalicRef}
-                    className="italic inline-block will-change-transform"
-                  >
-                    What's Next.
-                  </span>
-                </span>
-              </span>
-            </h2>
-
-            <p
-              ref={introParagraphRef}
-              className="text-sm sm:text-base text-[#895737] leading-[1.6] max-w-lg"
-            >
-              Every business has a different story. We design, develop, and host
-              websites that bring those stories to life — and turn visitors into
-              customers.
-            </p>
-          </div>
-
-          {/* Animated Handwritten Annotation with Curved SVG Arrow (Section 19) */}
-          <div className="hidden lg:flex items-center gap-3 text-[#895737] select-none pointer-events-none pb-2 pr-4">
-            <span
-              ref={arrowNoteTextRef}
-              className="font-serif italic text-base lg:text-lg text-[#895737]/90 tracking-wide rotate-[-3deg]"
-            >
-              Designed to deliver real results.
             </span>
-            <svg
-              width="50"
-              height="40"
-              viewBox="0 0 50 40"
-              fill="none"
-              className="text-[#C08552] stroke-current rotate-[5deg]"
-            >
-              <path
-                ref={arrowPathRef}
-                d="M4 8 C 18 4, 35 12, 42 29"
-                strokeWidth="1.9"
-                strokeLinecap="round"
-              />
-              <path
-                ref={arrowHeadRef}
-                d="M33 27 L 42 29 L 44 20"
-                strokeWidth="1.9"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+            <span className="block overflow-hidden">
+              <span ref={headingLine2Ref} className="inline-block will-change-transform">
+                Built for{" "}
+                <span
+                  ref={headingItalicRef}
+                  className="italic inline-block will-change-transform"
+                >
+                  What's Next.
+                </span>
+              </span>
+            </span>
+          </h2>
+
+          <p
+            ref={introParagraphRef}
+            className="text-sm sm:text-base text-[#895737] leading-[1.6] max-w-xl"
+          >
+            Every business has a different story. We design, develop, and host
+            websites that bring those stories to life — and turn visitors into
+            customers.
+          </p>
         </div>
 
         {/* ========================================================
@@ -531,23 +377,27 @@ export function RecentWork() {
               </div>
 
               {/* Project Title (Section 22) */}
-              <h3
-                ref={projectTitleRef}
-                className="font-serif text-[30px] sm:text-[38px] xl:text-[44px] text-[#5E3023] font-normal leading-[1.08] mb-3 tracking-tight will-change-transform"
-              >
-                {activeProject.name}
-              </h3>
+              <div className="min-h-[38px] sm:min-h-[48px] xl:min-h-[52px] flex items-center mb-3">
+                <h3
+                  ref={projectTitleRef}
+                  className="font-serif text-[30px] sm:text-[38px] xl:text-[44px] text-[#5E3023] font-normal leading-[1.08] tracking-tight will-change-transform"
+                >
+                  {activeProject.name}
+                </h3>
+              </div>
 
               {/* Narrative Description */}
-              <p
-                ref={projectDescRef}
-                className="text-[14px] sm:text-[15px] text-[#895737] leading-[1.65] mb-5 max-w-md will-change-transform"
-              >
-                {activeProject.description}
-              </p>
+              <div className="min-h-[70px] sm:min-h-[76px] mb-5 max-w-md">
+                <p
+                  ref={projectDescRef}
+                  className="text-[14px] sm:text-[15px] text-[#895737] leading-[1.65] will-change-transform"
+                >
+                  {activeProject.description}
+                </p>
+              </div>
 
               {/* Staggered Service Feature Pills (Section 20) */}
-              <div ref={servicePillsRef} className="flex flex-wrap gap-2 mb-6 sm:mb-8">
+              <div ref={servicePillsRef} className="flex flex-wrap gap-2 mb-6 sm:mb-8 min-h-[38px] will-change-transform">
                 {activeProject.services.map((service) => {
                   const IconComponent = getServiceIcon(service);
                   return (
@@ -631,13 +481,15 @@ export function RecentWork() {
                   aria-label={`Select ${project.name}`}
                   aria-current={isActive ? "true" : undefined}
                 >
-                  <Image
-                    src={project.thumbnailImage}
-                    alt={project.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="160px"
-                  />
+                  <div className="absolute inset-0">
+                    <Image
+                      src={project.thumbnailImage}
+                      alt={project.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="160px"
+                    />
+                  </div>
                   {/* Subtle Dark Vignette with Project Name */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-2 flex items-end">
                     <span className="text-[10px] sm:text-[11px] font-medium text-white line-clamp-1 group-hover:text-[#F3E9DC]">

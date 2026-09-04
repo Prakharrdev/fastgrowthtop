@@ -136,14 +136,14 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full max-w-[940px] mx-auto select-none pt-2 pb-2 group"
+      className="relative w-full max-w-[1040px] mx-auto select-none pt-2 pb-2 group"
     >
       {/* DEVICES STAGE: Laptop on left/center (dominant), Phone cleanly overlapping on the right */}
       <div className="relative flex items-end justify-between w-full">
         {/* ========================================================
-            1. LAPTOP (MacBook Pro) — 15–20% larger, 78%–80% width
+            1. LAPTOP (MacBook Pro) — Scaled up dominant showcase
            ======================================================== */}
-        <div className="relative w-[78%] sm:w-[80%] z-10">
+        <div className="relative w-[80%] sm:w-[82%] xl:w-[83%] z-10">
           {/* Mouse Parallax Wrapper */}
           <div ref={laptopParallaxRef} className="w-full transition-transform duration-75 ease-out">
             {/* Idle Floating Animation */}
@@ -175,7 +175,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
                   {/* Foreground Layer (Active Project Screenshot) */}
                   <div
                     key={`desktop-${currentProject.id}`}
-                    className={`relative w-full h-full z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
+                    className={`absolute inset-0 z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
                   >
                     <Image
                       src={currentProject.desktopImage}
@@ -238,7 +238,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
             2. MOBILE (iPhone) — Sits in foreground (higher z-index),
                overlapping the laptop base cleanly on the right
            ======================================================== */}
-        <div className="relative w-[24%] sm:w-[23%] max-w-[200px] min-w-[110px] z-30 -ml-[4%] mb-[2px] sm:mb-[4px]">
+        <div className="relative w-[23%] sm:w-[22%] max-w-[215px] sm:max-w-[230px] min-w-[110px] z-30 -ml-[4.5%] sm:-ml-[5%] mb-[2px] sm:mb-[4px]">
           {/* Mouse Parallax Wrapper */}
           <div ref={phoneParallaxRef} className="w-full transition-transform duration-75 ease-out">
             {/* Idle Floating Animation (offset timing) */}
@@ -268,7 +268,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
                   {/* Foreground Layer (Active Project) */}
                   <div
                     key={`mobile-${currentProject.id}`}
-                    className={`relative w-full h-full z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
+                    className={`absolute inset-0 z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
                   >
                     <Image
                       src={currentProject.mobileImage}
@@ -309,82 +309,9 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
         </div>
       </div>
 
-      {/* ========================================================
-          3. NATURAL SLATE ROCK LEDGE PEDESTAL (Grounding Depth)
-         ======================================================== */}
-      <div className="relative -mt-2 sm:-mt-5 w-full z-0 overflow-hidden pointer-events-none">
-        {/* Deep ambient drop shadow into background */}
-        <div className="absolute inset-x-6 top-2 h-8 sm:h-12 bg-[#5E3023]/25 blur-2xl rounded-full" />
-        <div className="absolute inset-x-14 top-4 h-6 sm:h-8 bg-[#2a1711]/30 blur-xl rounded-full" />
-
-        {/* Natural Rock Ledge Graphic */}
-        <svg
-          viewBox="0 0 800 48"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto drop-shadow-md"
-          preserveAspectRatio="none"
-        >
-          {/* Main Rock Base Body with Slate Gradient */}
-          <path
-            d="M 12 18 
-               Q 60 14, 140 16 
-               Q 240 19, 360 15 
-               Q 480 18, 620 14 
-               Q 720 16, 788 19 
-               L 796 42 
-               Q 710 46, 580 44 
-               Q 410 48, 250 44 
-               Q 120 46, 4 41 
-               Z"
-            fill="url(#rockSlateGrad)"
-          />
-
-          {/* Top Sunlit Rim Highlight (Warm Desert Sand / Golden Light) */}
-          <path
-            d="M 14 18 
-               Q 60 14, 140 16 
-               Q 240 19, 360 15 
-               Q 480 18, 620 14 
-               Q 720 16, 786 19"
-            stroke="url(#rockRimLight)"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-          />
-
-          {/* Rock Crags / Natural Geological Facet Creases */}
-          <path
-            d="M 140 16 L 165 34 M 270 17 L 295 38 M 460 16 L 485 36 M 615 15 L 640 37"
-            stroke="#1d1917"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-          <path
-            d="M 142 17 L 167 35 M 272 18 L 297 39 M 462 17 L 487 37 M 617 16 L 642 38"
-            stroke="#C08552"
-            strokeWidth="0.8"
-            strokeLinecap="round"
-            opacity="0.3"
-          />
-
-          <defs>
-            <linearGradient id="rockSlateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3d3530" />
-              <stop offset="25%" stopColor="#2c2522" />
-              <stop offset="50%" stopColor="#433b35" />
-              <stop offset="75%" stopColor="#292320" />
-              <stop offset="100%" stopColor="#1e1a18" />
-            </linearGradient>
-
-            <linearGradient id="rockRimLight" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#DAB49D" stopOpacity="0.4" />
-              <stop offset="30%" stopColor="#F3E9DC" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="#C08552" stopOpacity="0.85" />
-              <stop offset="100%" stopColor="#DAB49D" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-        </svg>
+      {/* Ambient grounding shadow below devices */}
+      <div className="relative -mt-1 sm:-mt-2 w-[90%] mx-auto pointer-events-none">
+        <div className="h-4 sm:h-6 bg-[#5E3023]/15 blur-xl rounded-full" />
       </div>
     </div>
   );
