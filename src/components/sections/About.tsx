@@ -46,11 +46,6 @@ export function About() {
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
             </div>
-            <div className="mt-4">
-              <p className="text-[12px] text-[#9A968E] tracking-[0.04em] italic">
-                Traverse City, Michigan — Where I'm based and inspired every day.
-              </p>
-            </div>
           </div>
         </div>
       </div>
