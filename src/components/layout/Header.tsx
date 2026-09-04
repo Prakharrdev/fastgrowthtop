@@ -18,44 +18,66 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    // 1. Throttled scroll position tracker for header blur/shadow (zero layout thrashing)
+    let rafId: number | null = null;
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        const isScrolled = window.scrollY > 20;
+        setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+        if (window.scrollY < 140) {
+          setActiveSection("");
+        }
+        rafId = null;
+      });
+    };
 
-      // If at very top (e.g. hero), no specific section active
-      if (window.scrollY < 160) {
-        setActiveSection("");
-        return;
-      }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
 
-      // If near bottom of page, activate contact
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 80) {
-        setActiveSection("contact");
-        return;
-      }
+    // 2. High-performance IntersectionObserver for active navigation section
+    const sectionIds = ["audit", "work", "about", "reviews", "contact"];
+    const visibleEntries = new Map<string, number>();
 
-      const sectionIds = ["audit", "work", "about", "reviews", "contact"];
-      let current = "";
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleEntries.set(entry.target.id, entry.intersectionRatio);
+          } else {
+            visibleEntries.delete(entry.target.id);
+          }
+        });
 
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          // Active when section top is near upper viewport and bottom is still below header
-          if (rect.top <= 240 && rect.bottom >= 120) {
-            current = id;
+        if (window.scrollY < 140) {
+          setActiveSection("");
+          return;
+        }
+
+        // Determine the first active section in reading order
+        for (const id of sectionIds) {
+          if (visibleEntries.has(id)) {
+            setActiveSection(id);
             break;
           }
         }
+      },
+      {
+        rootMargin: "-80px 0px -45% 0px",
+        threshold: [0, 0.15],
       }
+    );
 
-      if (current) {
-        setActiveSection(current);
-      }
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      observer.disconnect();
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {

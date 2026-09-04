@@ -16,6 +16,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
 
   // Mouse Parallax Refs (Direct DOM manipulation for 60/120fps performance without re-renders)
   const containerRef = useRef<HTMLDivElement>(null);
+  const containerRectRef = useRef<DOMRect | null>(null);
   const laptopParallaxRef = useRef<HTMLDivElement>(null);
   const phoneParallaxRef = useRef<HTMLDivElement>(null);
   const isHoveredRef = useRef(false);
@@ -79,13 +80,22 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
     }
   }, []);
 
+  const handleMouseEnter = () => {
+    if (containerRef.current) {
+      containerRectRef.current = containerRef.current.getBoundingClientRect();
+    }
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     // Check if device supports hover/fine pointer
     if (typeof window !== "undefined" && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       return;
     }
 
-    const rect = containerRef.current?.getBoundingClientRect();
+    if (!containerRectRef.current && containerRef.current) {
+      containerRectRef.current = containerRef.current.getBoundingClientRect();
+    }
+    const rect = containerRectRef.current;
     if (!rect) return;
 
     isHoveredRef.current = true;
@@ -115,6 +125,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
 
   const handleMouseLeave = () => {
     isHoveredRef.current = false;
+    containerRectRef.current = null;
     targetLaptopPos.current = { x: 0, y: 0, r: 0 };
     targetPhonePos.current = { x: 0, y: 0, r: 0 };
 
@@ -134,6 +145,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
   return (
     <div
       ref={containerRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative w-full max-w-[1040px] mx-auto select-none pt-2 pb-2 group"
@@ -145,7 +157,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
            ======================================================== */}
         <div className="relative w-[80%] sm:w-[82%] xl:w-[83%] z-10">
           {/* Mouse Parallax Wrapper */}
-          <div ref={laptopParallaxRef} className="w-full transition-transform duration-75 ease-out">
+          <div ref={laptopParallaxRef} className="w-full will-change-transform">
             {/* Idle Floating Animation */}
             <div className="w-full animate-laptop-float">
               {/* Laptop Lid Screen Frame */}
@@ -240,7 +252,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
            ======================================================== */}
         <div className="relative w-[23%] sm:w-[22%] max-w-[215px] sm:max-w-[230px] min-w-[110px] z-30 -ml-[4.5%] sm:-ml-[5%] mb-[2px] sm:mb-[4px]">
           {/* Mouse Parallax Wrapper */}
-          <div ref={phoneParallaxRef} className="w-full transition-transform duration-75 ease-out">
+          <div ref={phoneParallaxRef} className="w-full will-change-transform">
             {/* Idle Floating Animation (offset timing) */}
             <div className="w-full animate-phone-float">
               {/* iPhone Chassis */}
