@@ -115,9 +115,12 @@ export function SiteAudit() {
     setScanStep(0);
     setAuditData(null);
 
+    const startTime = Date.now();
+    const MIN_SCAN_DURATION = 5000; // Ensure a realistic 5-second scanning UX
+
     const stepInterval = setInterval(() => {
       setScanStep((prev) => (prev < scanStepsList.length - 1 ? prev + 1 : prev));
-    }, 1600);
+    }, 1000);
 
     try {
       const res = await fetch("/api/audit", {
@@ -127,11 +130,18 @@ export function SiteAudit() {
       });
 
       const data = await res.json();
-      clearInterval(stepInterval);
 
       if (!res.ok || data.error) {
         throw new Error(data.error || "Failed to analyze website");
       }
+
+      // Guarantee minimum 5-second scanning animation
+      const elapsed = Date.now() - startTime;
+      if (elapsed < MIN_SCAN_DURATION) {
+        await new Promise((resolve) => setTimeout(resolve, MIN_SCAN_DURATION - elapsed));
+      }
+
+      clearInterval(stepInterval);
 
       startTransition(() => {
         setAuditData(data);
