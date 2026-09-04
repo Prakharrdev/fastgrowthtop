@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -15,27 +15,195 @@ import {
   ExternalLink,
   Plus,
 } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DeviceMockup } from "@/components/ui/DeviceMockup";
 import { projectsData, ProjectItem } from "@/data/projects";
 
 export function RecentWork() {
-  const ref = useScrollReveal();
   const [activeIndex, setActiveIndex] = useState(0);
-  const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
-
-  const activeProject: ProjectItem = projectsData[activeIndex];
   const totalProjects = projectsData.length;
+  const activeProject: ProjectItem = projectsData[activeIndex];
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev === 0 ? totalProjects - 1 : prev - 1));
-  };
+  // DOM Refs
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingLine1Ref = useRef<HTMLSpanElement>(null);
+  const headingLine2Ref = useRef<HTMLSpanElement>(null);
+  const headingItalicRef = useRef<HTMLSpanElement>(null);
+  const introParagraphRef = useRef<HTMLParagraphElement>(null);
+  const arrowNoteTextRef = useRef<HTMLSpanElement>(null);
+  const arrowPathRef = useRef<SVGPathElement>(null);
+  const arrowHeadRef = useRef<SVGPathElement>(null);
+  const counterNumberRef = useRef<HTMLDivElement>(null);
+  const projectTitleRef = useRef<HTMLHeadingElement>(null);
+  const projectCategoryRef = useRef<HTMLDivElement>(null);
+  const projectDescRef = useRef<HTMLParagraphElement>(null);
+  const servicePillsRef = useRef<HTMLDivElement>(null);
+  const ctaContainerRef = useRef<HTMLDivElement>(null);
+  const deviceContainerRef = useRef<HTMLDivElement>(null);
+  const thumbnailsContainerRef = useRef<HTMLDivElement>(null);
+  const thumbnailRailRef = useRef<HTMLDivElement>(null);
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev === totalProjects - 1 ? 0 : prev + 1));
-  };
+  // Transition and Gesture Refs
+  const isTransitioningRef = useRef(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
-  // Scroll active thumbnail into center view
+  // ==========================================================
+  // 1. Centralized Project Transition Engine (Section 33)
+  // ==========================================================
+  const changeProject = useCallback(
+    (targetIndex: number, direction: "next" | "prev" = "next") => {
+      // Prevent duplicate transition triggers / rapid click spamming
+      if (isTransitioningRef.current || targetIndex === activeIndex) return;
+
+      isTransitioningRef.current = true;
+
+      // Check reduced motion preference
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (prefersReducedMotion) {
+        setActiveIndex(targetIndex);
+        isTransitioningRef.current = false;
+        return;
+      }
+
+      const yExit = direction === "next" ? -14 : 14;
+      const yEnter = direction === "next" ? 18 : -18;
+      const pills = servicePillsRef.current?.children;
+
+      // Phase 1: Animate current text elements out cleanly
+      const exitTl = gsap.timeline({
+        defaults: { ease: "power2.inOut" },
+        onComplete: () => {
+          // Switch state at the bottom of the exit
+          setActiveIndex(targetIndex);
+
+          // Phase 2: Animate new project details in with staggered sequence
+          const enterTl = gsap.timeline({
+            defaults: { ease: "power3.out" },
+            onComplete: () => {
+              isTransitioningRef.current = false;
+            },
+          });
+
+          // Animate sliding counter number
+          if (counterNumberRef.current) {
+            enterTl.fromTo(
+              counterNumberRef.current,
+              { yPercent: yEnter * 5, opacity: 0 },
+              { yPercent: 0, opacity: 1, duration: 0.45 },
+              0
+            );
+          }
+
+          // Animate title upward
+          if (projectTitleRef.current) {
+            enterTl.fromTo(
+              projectTitleRef.current,
+              { y: yEnter, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.55 },
+              0.05
+            );
+          }
+
+          // Animate category tag
+          if (projectCategoryRef.current) {
+            enterTl.fromTo(
+              projectCategoryRef.current,
+              { y: 8, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.4 },
+              0.1
+            );
+          }
+
+          // Animate narrative description
+          if (projectDescRef.current) {
+            enterTl.fromTo(
+              projectDescRef.current,
+              { y: 10, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5 },
+              0.12
+            );
+          }
+
+          // Animate service pills stagger
+          if (servicePillsRef.current && pills) {
+            enterTl.fromTo(
+              servicePillsRef.current.children,
+              { y: 8, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 },
+              0.18
+            );
+          }
+
+          // Subtle CTA fade
+          if (ctaContainerRef.current) {
+            enterTl.fromTo(
+              ctaContainerRef.current,
+              { opacity: 0.7, y: 4 },
+              { opacity: 1, y: 0, duration: 0.35 },
+              0.2
+            );
+          }
+        },
+      });
+
+      // Exit animations
+      if (counterNumberRef.current) {
+        exitTl.to(
+          counterNumberRef.current,
+          { yPercent: yExit * 5, opacity: 0, duration: 0.22 },
+          0
+        );
+      }
+      if (projectTitleRef.current) {
+        exitTl.to(
+          projectTitleRef.current,
+          { y: yExit, opacity: 0, duration: 0.24 },
+          0
+        );
+      }
+      if (projectCategoryRef.current) {
+        exitTl.to(
+          projectCategoryRef.current,
+          { opacity: 0, duration: 0.18 },
+          0.02
+        );
+      }
+      if (projectDescRef.current) {
+        exitTl.to(
+          projectDescRef.current,
+          { opacity: 0, duration: 0.2 },
+          0.02
+        );
+      }
+      if (pills && pills.length > 0) {
+        exitTl.to(
+          pills,
+          { opacity: 0, y: 4, duration: 0.18, stagger: 0.03 },
+          0.04
+        );
+      }
+    },
+    [activeIndex]
+  );
+
+  const handlePrev = useCallback(() => {
+    const nextIdx = activeIndex === 0 ? totalProjects - 1 : activeIndex - 1;
+    changeProject(nextIdx, "prev");
+  }, [activeIndex, totalProjects, changeProject]);
+
+  const handleNext = useCallback(() => {
+    const nextIdx = activeIndex === totalProjects - 1 ? 0 : activeIndex + 1;
+    changeProject(nextIdx, "next");
+  }, [activeIndex, totalProjects, changeProject]);
+
+  // ==========================================================
+  // 2. Scroll Active Thumbnail into View
+  // ==========================================================
   useEffect(() => {
     if (thumbnailsContainerRef.current) {
       const activeEl = thumbnailsContainerRef.current.children[activeIndex] as HTMLElement;
@@ -48,6 +216,182 @@ export function RecentWork() {
       }
     }
   }, [activeIndex]);
+
+  // ==========================================================
+  // 3. Page Load / Section Entrance Sequence (GSAP ScrollTrigger)
+  // ==========================================================
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    // Check reduced motion preference
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    // Prepare SVG curved arrow path lengths
+    let arrowLength = 120;
+    if (arrowPathRef.current) {
+      try {
+        arrowLength = arrowPathRef.current.getTotalLength();
+        gsap.set(arrowPathRef.current, {
+          strokeDasharray: arrowLength,
+          strokeDashoffset: arrowLength,
+        });
+      } catch {
+        // Fallback for older SVG support
+      }
+    }
+    if (arrowHeadRef.current) {
+      gsap.set(arrowHeadRef.current, { opacity: 0 });
+    }
+
+    const ctx = gsap.context(() => {
+      const entranceTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionEl,
+          start: "top 78%",
+          once: true,
+        },
+        defaults: { ease: "power3.out" },
+      });
+
+      // Line 1 heading reveal: "Websites"
+      if (headingLine1Ref.current) {
+        entranceTl.fromTo(
+          headingLine1Ref.current,
+          { yPercent: 110, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.8 },
+          0
+        );
+      }
+
+      // Line 2 heading reveal: "Built for"
+      if (headingLine2Ref.current) {
+        entranceTl.fromTo(
+          headingLine2Ref.current,
+          { yPercent: 110, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.8 },
+          0.12
+        );
+      }
+
+      // Italic accent delay reveal: "What's Next."
+      if (headingItalicRef.current) {
+        entranceTl.fromTo(
+          headingItalicRef.current,
+          { yPercent: 90, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.85 },
+          0.24
+        );
+      }
+
+      // Intro body paragraph
+      if (introParagraphRef.current) {
+        entranceTl.fromTo(
+          introParagraphRef.current,
+          { y: 22, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.65 },
+          0.3
+        );
+      }
+
+      // Handwritten Note and Sketched Arrow Animation (Section 19)
+      if (arrowNoteTextRef.current) {
+        entranceTl.fromTo(
+          arrowNoteTextRef.current,
+          { opacity: 0, y: 6 },
+          { opacity: 0.95, y: 0, duration: 0.4 },
+          0.4
+        );
+      }
+      if (arrowPathRef.current) {
+        entranceTl.to(
+          arrowPathRef.current,
+          { strokeDashoffset: 0, duration: 0.65, ease: "power2.out" },
+          0.55
+        );
+      }
+      if (arrowHeadRef.current) {
+        entranceTl.to(
+          arrowHeadRef.current,
+          { opacity: 1, duration: 0.25 },
+          1.1
+        );
+      }
+
+      // Devices entrance from right / depth
+      if (deviceContainerRef.current) {
+        entranceTl.fromTo(
+          deviceContainerRef.current,
+          { x: 36, opacity: 0, scale: 0.97 },
+          { x: 0, opacity: 1, scale: 1, duration: 1.0, ease: "power2.out" },
+          0.35
+        );
+      }
+
+      // Bottom thumbnail carousel rail entrance
+      if (thumbnailRailRef.current) {
+        entranceTl.fromTo(
+          thumbnailRailRef.current,
+          { y: 24, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7 },
+          0.5
+        );
+      }
+    }, sectionEl);
+
+    return () => ctx.revert();
+  }, []);
+
+  // ==========================================================
+  // 4. Keyboard Navigation (Section 28)
+  // ==========================================================
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!isInViewport) return;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handlePrev, handleNext]);
+
+  // ==========================================================
+  // 5. Mobile Touch / Swipe Handling (Section 27)
+  // ==========================================================
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Threshold ~48px and verify horizontal swipe intent to preserve vertical scroll
+    if (Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+      if (deltaX < 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+  };
 
   const getServiceIcon = (service: string) => {
     const s = service.toLowerCase();
@@ -62,187 +406,241 @@ export function RecentWork() {
   return (
     <section
       id="work"
-      ref={ref}
-      className="relative min-h-screen xl:h-screen xl:max-h-[1050px] flex flex-col justify-between py-6 sm:py-8 lg:py-10 bg-[#F3E9DC] overflow-hidden"
+      ref={sectionRef}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="relative flex flex-col justify-between py-8 sm:py-12 lg:py-16 bg-[#F3E9DC] overflow-hidden"
     >
       <div className="w-full max-w-[1380px] mx-auto px-5 sm:px-8 md:px-12 flex flex-col flex-grow justify-between">
         {/* ========================================================
-            MAIN SHOWCASE: HEADER + INTERACTIVE PROJECT + DEVICES
+            HEADER ROW: Section Title + Intro + Sketched Annotation
            ======================================================== */}
-        <div className="flex flex-col justify-center flex-grow py-2">
-          {/* Header Row */}
-          <div className="relative mb-6 sm:mb-8 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <div className="max-w-xl">
-              <h2 className="reveal reveal-delay-1 font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.02] text-[#5E3023] mb-3 tracking-tight">
-                Websites <br className="hidden sm:inline" />
-                Built for <span className="italic">What's Next.</span>
-              </h2>
-              <p className="reveal reveal-delay-2 text-sm sm:text-base text-[#895737] leading-[1.55] max-w-lg">
-                Every business has a different story. We design, develop, and host
-                websites that bring those stories to life — and turn visitors into
-                customers.
-              </p>
-            </div>
-
-            {/* Handwritten Annotation with Sketched Curved Arrow */}
-            <div className="hidden lg:flex items-center gap-3 text-[#895737] select-none pointer-events-none pb-2 pr-6">
-              <span className="font-serif italic text-base lg:text-lg text-[#895737]/90 tracking-wide rotate-[-3deg]">
-                Designed to deliver real results.
+        <div className="relative mb-6 sm:mb-8 lg:mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+          <div className="max-w-xl">
+            {/* Masked Line-by-Line Headline Reveal (Section 5) */}
+            <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.04] text-[#5E3023] mb-3 tracking-tight">
+              <span className="block overflow-hidden pb-1">
+                <span ref={headingLine1Ref} className="inline-block will-change-transform">
+                  Websites
+                </span>
               </span>
-              <svg
-                width="46"
-                height="38"
-                viewBox="0 0 46 38"
-                fill="none"
-                className="text-[#C08552] stroke-current rotate-[6deg]"
-              >
-                <path
-                  d="M4 8 C 16 4, 32 12, 38 28"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeDasharray="2 0"
-                />
-                <path
-                  d="M30 26 L 38 28 L 40 20"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+              <span className="block overflow-hidden">
+                <span ref={headingLine2Ref} className="inline-block will-change-transform">
+                  Built for{" "}
+                  <span
+                    ref={headingItalicRef}
+                    className="italic inline-block will-change-transform"
+                  >
+                    What's Next.
+                  </span>
+                </span>
+              </span>
+            </h2>
+
+            <p
+              ref={introParagraphRef}
+              className="text-sm sm:text-base text-[#895737] leading-[1.6] max-w-lg"
+            >
+              Every business has a different story. We design, develop, and host
+              websites that bring those stories to life — and turn visitors into
+              customers.
+            </p>
           </div>
 
-          {/* Project Details Grid (Left Details + Right Devices) */}
-          <div className="reveal reveal-delay-3 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            {/* Left Column: Dynamic Animated Active Project Information */}
-            <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
-              {/* Counter & Arrow Controls */}
-              <div className="flex items-center gap-4 mb-3">
-                <span className="text-xs sm:text-sm font-mono tracking-widest text-[#895737] font-semibold">
-                  {activeProject.number} / 0{totalProjects}
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrev}
-                    className="w-8 h-8 rounded-full border border-[#DAB49D] flex items-center justify-center text-[#5E3023] hover:bg-[#DAB49D]/40 active:scale-90 transition-all cursor-pointer shadow-sm"
-                    aria-label="Previous project"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="w-8 h-8 rounded-full bg-[#5E3023] text-[#F3E9DC] flex items-center justify-center hover:bg-[#482319] active:scale-90 transition-all cursor-pointer shadow-sm"
-                    aria-label="Next project"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Animated Text Container on Project Switch */}
-              <div key={activeProject.id} className="animate-content-slide">
-                {/* Project Title */}
-                <h3 className="font-serif text-[28px] sm:text-[36px] xl:text-[42px] text-[#5E3023] font-normal leading-[1.08] mb-1.5 tracking-tight">
-                  {activeProject.name}
-                </h3>
-
-                {/* Category & Location Tag */}
-                <div className="text-[11px] sm:text-xs font-semibold tracking-[0.14em] text-[#895737]/80 uppercase mb-3">
-                  {activeProject.categoryTag}
-                </div>
-
-                {/* Narrative Description */}
-                <p className="text-[14px] sm:text-[15px] text-[#895737] leading-[1.6] mb-5 max-w-md">
-                  {activeProject.description}
-                </p>
-
-                {/* Outlined Service Feature Pills */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {activeProject.services.map((service) => {
-                    const IconComponent = getServiceIcon(service);
-                    return (
-                      <div
-                        key={service}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#DAB49D] bg-[#FAF6F0]/75 text-[#895737] text-[11px] sm:text-[12px] font-medium shadow-[0_1px_2px_rgba(94,48,35,0.04)]"
-                      >
-                        <IconComponent className="w-3.5 h-3.5 text-[#C08552]" />
-                        <span>{service}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Action CTAs */}
-                <div className="flex items-center gap-4">
-                  {activeProject.liveUrl && activeProject.liveUrl.startsWith("http") ? (
-                    <a
-                      href={activeProject.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#5E3023] text-[#F3E9DC] text-xs sm:text-sm font-medium shadow-md hover:bg-[#482319] hover:shadow-lg active:scale-95 transition-all"
-                    >
-                      <span>View Live Site</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  ) : (
-                    <a
-                      href="#contact"
-                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full bg-[#5E3023] text-[#F3E9DC] text-xs sm:text-sm font-medium shadow-md hover:bg-[#482319] hover:shadow-lg active:scale-95 transition-all group"
-                    >
-                      <span>View Project</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </a>
-                  )}
-
-                  <button
-                    onClick={handleNext}
-                    className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-[#5E3023] hover:text-[#C08552] transition-colors cursor-pointer py-2"
-                  >
-                    <span>Next Project</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Device Mockups (Laptop + Phone + Slate Rock Base) */}
-            <div className="lg:col-span-7 order-1 lg:order-2 flex items-center justify-center">
-              <DeviceMockup project={activeProject} />
-            </div>
+          {/* Animated Handwritten Annotation with Curved SVG Arrow (Section 19) */}
+          <div className="hidden lg:flex items-center gap-3 text-[#895737] select-none pointer-events-none pb-2 pr-4">
+            <span
+              ref={arrowNoteTextRef}
+              className="font-serif italic text-base lg:text-lg text-[#895737]/90 tracking-wide rotate-[-3deg]"
+            >
+              Designed to deliver real results.
+            </span>
+            <svg
+              width="50"
+              height="40"
+              viewBox="0 0 50 40"
+              fill="none"
+              className="text-[#C08552] stroke-current rotate-[5deg]"
+            >
+              <path
+                ref={arrowPathRef}
+                d="M4 8 C 18 4, 35 12, 42 29"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+              />
+              <path
+                ref={arrowHeadRef}
+                d="M33 27 L 42 29 L 44 20"
+                strokeWidth="1.9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </div>
 
         {/* ========================================================
-            BOTTOM: HORIZONTAL THUMBNAIL CAROUSEL STRIP
+            MAIN SHOWCASE GRID:
+            Left: Active Project Narrative & Controls (42%)
+            Right: Large Dominant Device Showcase (58%)
            ======================================================== */}
-        <div className="reveal reveal-delay-4 pt-3 pb-1 border-t border-[#DAB49D]/40">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center mb-8 sm:mb-12">
+          {/* LEFT COLUMN: Project Details & Navigation */}
+          <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
+            {/* Sliding Project Counter & Circular Arrow Controls (Section 13 & 21) */}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-1 font-mono text-xs sm:text-sm font-semibold tracking-widest text-[#895737]">
+                <div className="relative h-5 w-6 overflow-hidden flex items-center justify-center">
+                  <div
+                    ref={counterNumberRef}
+                    className="absolute inset-0 flex items-center justify-center will-change-transform"
+                  >
+                    {activeProject.number}
+                  </div>
+                </div>
+                <span>/ 0{totalProjects}</span>
+              </div>
+
+              {/* Prev / Next Circular Buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePrev}
+                  className="group w-9 h-9 rounded-full border border-[#DAB49D] flex items-center justify-center text-[#5E3023] hover:bg-[#DAB49D]/40 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-sm"
+                  aria-label="Previous project"
+                >
+                  <ChevronLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="group w-9 h-9 rounded-full bg-[#5E3023] text-[#F3E9DC] flex items-center justify-center hover:bg-[#482319] hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shadow-sm"
+                  aria-label="Next project"
+                >
+                  <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Dynamic Project Text Container */}
+            <div className="flex flex-col">
+              {/* Category & Location Tag */}
+              <div
+                ref={projectCategoryRef}
+                className="text-[11px] sm:text-xs font-semibold tracking-[0.14em] text-[#895737]/85 uppercase mb-1.5 will-change-transform"
+              >
+                {activeProject.categoryTag}
+              </div>
+
+              {/* Project Title (Section 22) */}
+              <h3
+                ref={projectTitleRef}
+                className="font-serif text-[30px] sm:text-[38px] xl:text-[44px] text-[#5E3023] font-normal leading-[1.08] mb-3 tracking-tight will-change-transform"
+              >
+                {activeProject.name}
+              </h3>
+
+              {/* Narrative Description */}
+              <p
+                ref={projectDescRef}
+                className="text-[14px] sm:text-[15px] text-[#895737] leading-[1.65] mb-5 max-w-md will-change-transform"
+              >
+                {activeProject.description}
+              </p>
+
+              {/* Staggered Service Feature Pills (Section 20) */}
+              <div ref={servicePillsRef} className="flex flex-wrap gap-2 mb-6 sm:mb-8">
+                {activeProject.services.map((service) => {
+                  const IconComponent = getServiceIcon(service);
+                  return (
+                    <div
+                      key={service}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#DAB49D] bg-[#FAF6F0]/80 text-[#895737] text-[11px] sm:text-[12px] font-medium shadow-[0_1px_2px_rgba(94,48,35,0.04)] hover:border-[#C08552] transition-colors"
+                    >
+                      <IconComponent className="w-3.5 h-3.5 text-[#C08552]" />
+                      <span>{service}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Action CTAs (Section 14 & 15) */}
+              <div ref={ctaContainerRef} className="flex items-center gap-4 sm:gap-6">
+                {activeProject.liveUrl && activeProject.liveUrl.startsWith("http") ? (
+                  <a
+                    href={activeProject.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#5E3023] text-[#F3E9DC] text-xs sm:text-sm font-medium shadow-md hover:bg-[#482319] hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
+                  >
+                    <span>View Live Site</span>
+                    <ExternalLink className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </a>
+                ) : (
+                  <a
+                    href="#contact"
+                    className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#5E3023] text-[#F3E9DC] text-xs sm:text-sm font-medium shadow-md hover:bg-[#482319] hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
+                  >
+                    <span>View Project</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+
+                <button
+                  onClick={handleNext}
+                  className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-[#5E3023] hover:text-[#C08552] transition-colors cursor-pointer py-2"
+                >
+                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                    Next Project
+                  </span>
+                  <ChevronRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: Dominant Device Mockup Showcase (Section 7, 8, 9, 37) */}
+          <div
+            ref={deviceContainerRef}
+            className="lg:col-span-7 order-1 lg:order-2 flex items-center justify-center w-full will-change-transform"
+          >
+            <DeviceMockup project={activeProject} />
+          </div>
+        </div>
+
+        {/* ========================================================
+            BOTTOM: HORIZONTAL PROJECT THUMBNAIL CAROUSEL (Section 11 & 36)
+           ======================================================== */}
+        <div
+          ref={thumbnailRailRef}
+          className="pt-4 pb-2 border-t border-[#DAB49D]/50"
+        >
           <div
             ref={thumbnailsContainerRef}
-            className="flex items-center gap-2.5 sm:gap-3.5 overflow-x-auto py-1 no-scrollbar scroll-smooth"
+            className="flex items-center gap-3 sm:gap-4 overflow-x-auto py-2 px-1 no-scrollbar scroll-smooth"
           >
             {projectsData.map((project, idx) => {
               const isActive = idx === activeIndex;
               return (
                 <button
                   key={project.id}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`relative flex-shrink-0 w-[105px] sm:w-[130px] md:w-[145px] aspect-[16/10] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 text-left ${
+                  onClick={() => changeProject(idx, idx > activeIndex ? "next" : "prev")}
+                  className={`group relative flex-shrink-0 w-[110px] sm:w-[135px] md:w-[150px] aspect-[16/10] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 text-left ${
                     isActive
                       ? "ring-2 ring-[#5E3023] ring-offset-2 ring-offset-[#F3E9DC] shadow-md scale-105 opacity-100 z-10"
-                      : "opacity-60 hover:opacity-100 hover:scale-102 border border-[#DAB49D]/80"
+                      : "opacity-65 hover:opacity-100 hover:scale-103 border border-[#DAB49D]/80"
                   }`}
                   aria-label={`Select ${project.name}`}
+                  aria-current={isActive ? "true" : undefined}
                 >
                   <Image
                     src={project.thumbnailImage}
                     alt={project.name}
                     fill
-                    className="object-cover"
-                    sizes="150px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="160px"
                   />
-                  {/* Subtle Dark Vignette with Name */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent p-1.5 flex items-end">
-                    <span className="text-[10px] sm:text-[11px] font-medium text-white line-clamp-1">
+                  {/* Subtle Dark Vignette with Project Name */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-2 flex items-end">
+                    <span className="text-[10px] sm:text-[11px] font-medium text-white line-clamp-1 group-hover:text-[#F3E9DC]">
                       {project.name}
                     </span>
                   </div>
@@ -250,15 +648,15 @@ export function RecentWork() {
               );
             })}
 
-            {/* Final Special Card: "Your Business Could Be Next" */}
+            {/* Special Final CTA Card: "Your Business Could Be Next" (Section 36) */}
             <a
               href="#contact"
-              className="group flex-shrink-0 w-[105px] sm:w-[130px] md:w-[145px] aspect-[16/10] rounded-lg border-2 border-dashed border-[#C08552]/75 bg-[#FAF6F0]/60 hover:bg-[#FAF6F0] p-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer shadow-sm hover:shadow-md hover:scale-102"
+              className="group flex-shrink-0 w-[110px] sm:w-[135px] md:w-[150px] aspect-[16/10] rounded-lg border-2 border-dashed border-[#C08552]/80 hover:border-[#5E3023] bg-[#FAF6F0]/65 hover:bg-[#FAF6F0] p-2 flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 hover:scale-103"
             >
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#C08552]/15 group-hover:bg-[#C08552]/25 flex items-center justify-center text-[#C08552] mb-1 transition-colors">
-                <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <div className="w-6 h-6 rounded-full bg-[#C08552]/15 group-hover:bg-[#5E3023]/15 flex items-center justify-center text-[#C08552] group-hover:text-[#5E3023] mb-1 transition-all duration-300">
+                <Plus className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-90" />
               </div>
-              <span className="text-[9px] sm:text-[10px] font-serif text-[#5E3023] font-medium group-hover:text-[#C08552] leading-tight transition-colors">
+              <span className="text-[10px] sm:text-[11px] font-serif text-[#5E3023] font-medium leading-tight transition-colors">
                 Your Business
                 <br />
                 Could Be Next

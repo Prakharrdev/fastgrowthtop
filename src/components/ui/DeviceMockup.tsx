@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { ProjectItem } from "@/data/projects";
 
@@ -8,148 +9,320 @@ interface DeviceMockupProps {
 }
 
 export function DeviceMockup({ project }: DeviceMockupProps) {
+  // Dual-layer state for zero-flash screenshot transitions
+  const [currentProject, setCurrentProject] = useState<ProjectItem>(project);
+  const [prevProject, setPrevProject] = useState<ProjectItem | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Mouse Parallax Refs (Direct DOM manipulation for 60/120fps performance without re-renders)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const laptopParallaxRef = useRef<HTMLDivElement>(null);
+  const phoneParallaxRef = useRef<HTMLDivElement>(null);
+  const isHoveredRef = useRef(false);
+  const mouseAnimFrameRef = useRef<number | null>(null);
+
+  // Current interpolated positions
+  const targetLaptopPos = useRef({ x: 0, y: 0, r: 0 });
+  const currentLaptopPos = useRef({ x: 0, y: 0, r: 0 });
+  const targetPhonePos = useRef({ x: 0, y: 0, r: 0 });
+  const currentPhonePos = useRef({ x: 0, y: 0, r: 0 });
+
+  // Handle project change with cross-scaling
+  useEffect(() => {
+    if (project.id !== currentProject.id) {
+      setPrevProject(currentProject);
+      setCurrentProject(project);
+      setIsTransitioning(true);
+
+      const timer = setTimeout(() => {
+        setPrevProject(null);
+        setIsTransitioning(false);
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+  }, [project, currentProject]);
+
+  // Smooth lerp / requestAnimationFrame loop for device mouse parallax
+  const updateParallax = useCallback(() => {
+    const lerpFactor = 0.08;
+
+    // Laptop lerp
+    currentLaptopPos.current.x += (targetLaptopPos.current.x - currentLaptopPos.current.x) * lerpFactor;
+    currentLaptopPos.current.y += (targetLaptopPos.current.y - currentLaptopPos.current.y) * lerpFactor;
+    currentLaptopPos.current.r += (targetLaptopPos.current.r - currentLaptopPos.current.r) * lerpFactor;
+
+    // Phone lerp (higher responsiveness/depth)
+    currentPhonePos.current.x += (targetPhonePos.current.x - currentPhonePos.current.x) * (lerpFactor * 1.25);
+    currentPhonePos.current.y += (targetPhonePos.current.y - currentPhonePos.current.y) * (lerpFactor * 1.25);
+    currentPhonePos.current.r += (targetPhonePos.current.r - currentPhonePos.current.r) * (lerpFactor * 1.25);
+
+    if (laptopParallaxRef.current) {
+      laptopParallaxRef.current.style.transform = `translate3d(${currentLaptopPos.current.x.toFixed(2)}px, ${currentLaptopPos.current.y.toFixed(2)}px, 0) rotate(${currentLaptopPos.current.r.toFixed(2)}deg)`;
+    }
+
+    if (phoneParallaxRef.current) {
+      phoneParallaxRef.current.style.transform = `translate3d(${currentPhonePos.current.x.toFixed(2)}px, ${currentPhonePos.current.y.toFixed(2)}px, 0) rotate(${currentPhonePos.current.r.toFixed(2)}deg)`;
+    }
+
+    // Continue loop if hovered or returning to origin
+    const delta =
+      Math.abs(targetLaptopPos.current.x - currentLaptopPos.current.x) +
+      Math.abs(targetLaptopPos.current.y - currentLaptopPos.current.y) +
+      Math.abs(targetPhonePos.current.x - currentPhonePos.current.x) +
+      Math.abs(targetPhonePos.current.y - currentPhonePos.current.y);
+
+    if (isHoveredRef.current || delta > 0.05) {
+      mouseAnimFrameRef.current = requestAnimationFrame(updateParallax);
+    } else {
+      mouseAnimFrameRef.current = null;
+    }
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Check if device supports hover/fine pointer
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      return;
+    }
+
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    isHoveredRef.current = true;
+
+    // Normalized from -1 to 1
+    const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+    // Laptop: gentle 6–8px movement, subtle 0.3deg rotation
+    targetLaptopPos.current = {
+      x: normX * 8,
+      y: normY * 5,
+      r: normX * 0.3,
+    };
+
+    // Phone: stronger 12–16px movement, 0.6deg rotation (creates 3D parallax depth)
+    targetPhonePos.current = {
+      x: normX * 14,
+      y: normY * 9,
+      r: normX * 0.6,
+    };
+
+    if (!mouseAnimFrameRef.current) {
+      mouseAnimFrameRef.current = requestAnimationFrame(updateParallax);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    isHoveredRef.current = false;
+    targetLaptopPos.current = { x: 0, y: 0, r: 0 };
+    targetPhonePos.current = { x: 0, y: 0, r: 0 };
+
+    if (!mouseAnimFrameRef.current) {
+      mouseAnimFrameRef.current = requestAnimationFrame(updateParallax);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (mouseAnimFrameRef.current) {
+        cancelAnimationFrame(mouseAnimFrameRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="relative w-full max-w-[820px] mx-auto select-none pt-2 pb-4 group">
-      {/* DEVICES STAGE: Laptop on left/center, Phone cleanly beside it on the right */}
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full max-w-[940px] mx-auto select-none pt-2 pb-2 group"
+    >
+      {/* DEVICES STAGE: Laptop on left/center (dominant), Phone cleanly overlapping on the right */}
       <div className="relative flex items-end justify-between w-full">
         {/* ========================================================
-            1. LAPTOP (MacBook Pro) — 76% to 78% width, completely unobscured
+            1. LAPTOP (MacBook Pro) — 15–20% larger, 78%–80% width
            ======================================================== */}
-        <div className="relative w-[77%] sm:w-[79%] z-10 transition-transform duration-700 ease-out group-hover:-translate-y-1">
-          {/* Laptop Lid Screen Frame */}
-          <div className="relative bg-[#1a1715] rounded-t-[16px] sm:rounded-t-[22px] p-[6px] sm:p-[10px] pb-0 border border-[#3e3833] shadow-[0_24px_50px_rgba(94,48,35,0.22)]">
-            {/* Screen Top Camera Notch */}
-            <div className="absolute top-[2px] sm:top-[4px] left-1/2 -translate-x-1/2 z-30 flex items-center justify-center w-20 sm:w-32 h-2.5 sm:h-4 bg-[#1a1715] rounded-b-md">
-              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#0d0c0b] border border-[#2e2a27] flex items-center justify-center">
-                <div className="w-0.5 h-0.5 rounded-full bg-[#1b3a4b]/90" />
-              </div>
-            </div>
-
-            {/* Screen Display Area (16:10) */}
-            <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-[10px] sm:rounded-t-[14px] bg-[#1d1a18]">
-              {/* Animated Desktop Website Image */}
-              <div key={`desktop-${project.id}`} className="relative w-full h-full animate-device-fade">
-                <Image
-                  src={project.desktopImage}
-                  alt={`${project.name} Desktop Website`}
-                  fill
-                  priority
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 55vw, 680px"
-                />
-
-                {/* In-screen Realistic Website Navigation Header Overlay */}
-                <div className="absolute top-0 inset-x-0 bg-gradient-to-b from-black/80 via-black/45 to-transparent p-2.5 sm:p-4 text-white z-10 flex items-center justify-between pointer-events-none">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-white/80 flex items-center justify-center">
-                      <div className="w-1 h-1 bg-[#FAF6F0] rounded-full" />
-                    </div>
-                    <span className="text-[10px] sm:text-xs font-serif tracking-wider uppercase font-semibold text-white/95">
-                      {project.name}
-                    </span>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-4 text-[10px] font-sans tracking-wide text-white/90">
-                    <span>Services</span>
-                    <span>Portfolio</span>
-                    <span>About</span>
-                    <span>Contact</span>
-                    <span className="bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded text-[9px] font-medium border border-white/30 text-white">
-                      Get a Quote
-                    </span>
+        <div className="relative w-[78%] sm:w-[80%] z-10">
+          {/* Mouse Parallax Wrapper */}
+          <div ref={laptopParallaxRef} className="w-full transition-transform duration-75 ease-out">
+            {/* Idle Floating Animation */}
+            <div className="w-full animate-laptop-float">
+              {/* Laptop Lid Screen Frame */}
+              <div className="relative bg-[#1a1715] rounded-t-[18px] sm:rounded-t-[24px] p-[7px] sm:p-[12px] pb-0 border border-[#3e3833] shadow-[0_28px_60px_rgba(94,48,35,0.25)]">
+                {/* Screen Top Camera Notch */}
+                <div className="absolute top-[2px] sm:top-[4px] left-1/2 -translate-x-1/2 z-30 flex items-center justify-center w-24 sm:w-36 h-2.5 sm:h-4 bg-[#1a1715] rounded-b-md">
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#0d0c0b] border border-[#2e2a27] flex items-center justify-center">
+                    <div className="w-0.5 h-0.5 rounded-full bg-[#1b3a4b]/90" />
                   </div>
                 </div>
 
-                {/* Specular Glass Sheen */}
-                <div
-                  className="absolute inset-0 pointer-events-none z-20"
-                  style={{
-                    background:
-                      "linear-gradient(125deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.03) 35%, transparent 60%)",
-                  }}
-                />
+                {/* Screen Display Area (16:10) with Overflow Hidden */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-[12px] sm:rounded-t-[16px] bg-[#1d1a18]">
+                  {/* Background Layer (Previous Project during transition to prevent flashes) */}
+                  {prevProject && (
+                    <div className="absolute inset-0 z-0 animate-screen-exit pointer-events-none">
+                      <Image
+                        src={prevProject.desktopImage}
+                        alt={`${prevProject.name} Desktop Website`}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 768px) 90vw, (max-width: 1200px) 60vw, 780px"
+                      />
+                    </div>
+                  )}
+
+                  {/* Foreground Layer (Active Project Screenshot) */}
+                  <div
+                    key={`desktop-${currentProject.id}`}
+                    className={`relative w-full h-full z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
+                  >
+                    <Image
+                      src={currentProject.desktopImage}
+                      alt={`${currentProject.name} Desktop Website`}
+                      fill
+                      priority
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 90vw, (max-width: 1200px) 60vw, 780px"
+                    />
+
+                    {/* In-screen Website Navigation Header Simulation */}
+                    <div className="absolute top-0 inset-x-0 bg-gradient-to-b from-black/85 via-black/50 to-transparent p-3 sm:p-4 text-white z-20 flex items-center justify-between pointer-events-none">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-white/80 flex items-center justify-center">
+                          <div className="w-1 h-1 bg-[#FAF6F0] rounded-full" />
+                        </div>
+                        <span className="text-[10px] sm:text-xs font-serif tracking-wider uppercase font-semibold text-white/95">
+                          {currentProject.name}
+                        </span>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-4 text-[10px] font-sans tracking-wide text-white/90">
+                        <span>Services</span>
+                        <span>Portfolio</span>
+                        <span>About</span>
+                        <span>Contact</span>
+                        <span className="bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded text-[9px] font-medium border border-white/30 text-white">
+                          Get a Quote
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Realistic Specular Glass Sheen */}
+                    <div
+                      className="absolute inset-0 pointer-events-none z-20"
+                      style={{
+                        background:
+                          "linear-gradient(125deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.03) 38%, transparent 62%)",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Laptop Aluminum Base & Hinge */}
+              <div className="relative w-[105%] -left-[2.5%] z-20">
+                {/* Keyboard Deck Top Lip */}
+                <div className="h-[10px] sm:h-[14px] bg-gradient-to-r from-[#2c2825] via-[#4a443f] to-[#2c2825] rounded-b-[4px] border-t border-[#5c544d] flex items-start justify-center shadow-md">
+                  {/* Center Thumb Notch */}
+                  <div className="w-16 sm:w-24 h-[3px] sm:h-[4px] bg-[#181615] rounded-b-md" />
+                </div>
+
+                {/* Bottom Footpad Shadow */}
+                <div className="h-[3px] sm:h-[5px] bg-gradient-to-r from-transparent via-[#181615]/80 to-transparent w-[96%] mx-auto" />
               </div>
             </div>
-          </div>
-
-          {/* Laptop Aluminum Base & Hinge */}
-          <div className="relative w-[105%] -left-[2.5%] z-20">
-            {/* Keyboard Deck Top Lip */}
-            <div className="h-[9px] sm:h-[13px] bg-gradient-to-r from-[#2c2825] via-[#48423d] to-[#2c2825] rounded-b-[4px] border-t border-[#585049] flex items-start justify-center shadow-md">
-              {/* Center Thumb Notch */}
-              <div className="w-14 sm:w-20 h-[3px] sm:h-[4px] bg-[#181615] rounded-b-md" />
-            </div>
-
-            {/* Bottom Footpad Shadow */}
-            <div className="h-[3px] sm:h-[4px] bg-gradient-to-r from-transparent via-[#181615]/75 to-transparent w-[96%] mx-auto" />
           </div>
         </div>
 
         {/* ========================================================
-            2. MOBILE (iPhone) — Sits upright to the right, overlapping ONLY the base corner
+            2. MOBILE (iPhone) — Sits in foreground (higher z-index),
+               overlapping the laptop base cleanly on the right
            ======================================================== */}
-        <div className="relative w-[23%] sm:w-[22%] max-w-[175px] min-w-[105px] z-30 transition-transform duration-700 ease-out group-hover:-translate-y-1.5 -ml-[3%] mb-[3px] sm:mb-[6px]">
-          {/* iPhone Chassis */}
-          <div className="relative bg-[#191716] p-[4px] sm:p-[6px] pb-[5px] rounded-[24px] sm:rounded-[36px] border-[2.5px] sm:border-[4px] border-[#38332f] shadow-[0_24px_45px_rgba(94,48,35,0.35),0_8px_16px_rgba(0,0,0,0.25)]">
-            {/* Dynamic Island */}
-            <div className="absolute top-[6px] sm:top-[9px] left-1/2 -translate-x-1/2 z-30 w-10 sm:w-14 h-2.5 sm:h-3.5 bg-black rounded-full flex items-center justify-end pr-1 sm:pr-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#1b3a4b]/80" />
-            </div>
+        <div className="relative w-[24%] sm:w-[23%] max-w-[200px] min-w-[110px] z-30 -ml-[4%] mb-[2px] sm:mb-[4px]">
+          {/* Mouse Parallax Wrapper */}
+          <div ref={phoneParallaxRef} className="w-full transition-transform duration-75 ease-out">
+            {/* Idle Floating Animation (offset timing) */}
+            <div className="w-full animate-phone-float">
+              {/* iPhone Chassis */}
+              <div className="relative bg-[#191716] p-[5px] sm:p-[7px] pb-[6px] rounded-[26px] sm:rounded-[40px] border-[2.5px] sm:border-[4.5px] border-[#38332f] shadow-[0_28px_50px_rgba(94,48,35,0.38),0_10px_20px_rgba(0,0,0,0.3)]">
+                {/* Dynamic Island */}
+                <div className="absolute top-[7px] sm:top-[11px] left-1/2 -translate-x-1/2 z-30 w-11 sm:w-16 h-2.5 sm:h-3.5 bg-black rounded-full flex items-center justify-end pr-1 sm:pr-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1b3a4b]/80" />
+                </div>
 
-            {/* iPhone Display */}
-            <div className="relative w-full aspect-[9/19] overflow-hidden rounded-[18px] sm:rounded-[28px] bg-[#1d1a18]">
-              {/* Animated Mobile Website Image */}
-              <div key={`mobile-${project.id}`} className="relative w-full h-full animate-device-fade">
-                <Image
-                  src={project.mobileImage}
-                  alt={`${project.name} Mobile Website`}
-                  fill
-                  priority
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 30vw, 180px"
-                />
+                {/* iPhone Display */}
+                <div className="relative w-full aspect-[9/19] overflow-hidden rounded-[20px] sm:rounded-[32px] bg-[#1d1a18]">
+                  {/* Background Layer (Previous Project) */}
+                  {prevProject && (
+                    <div className="absolute inset-0 z-0 animate-screen-exit pointer-events-none">
+                      <Image
+                        src={prevProject.mobileImage}
+                        alt={`${prevProject.name} Mobile Website`}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 768px) 35vw, 200px"
+                      />
+                    </div>
+                  )}
 
-                {/* Mobile Header Bar Overlay */}
-                <div className="absolute top-0 inset-x-0 bg-gradient-to-b from-black/80 to-transparent p-2 sm:p-2.5 pt-4 text-white z-10 flex items-center justify-between pointer-events-none">
-                  <span className="text-[7px] sm:text-[9px] font-serif font-semibold tracking-wider uppercase truncate max-w-[65px]">
-                    {project.name}
-                  </span>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="w-2.5 sm:w-3.5 h-[1px] bg-white rounded-full" />
-                    <span className="w-2.5 sm:w-3.5 h-[1px] bg-white rounded-full" />
+                  {/* Foreground Layer (Active Project) */}
+                  <div
+                    key={`mobile-${currentProject.id}`}
+                    className={`relative w-full h-full z-10 ${isTransitioning ? "animate-screen-enter" : ""}`}
+                  >
+                    <Image
+                      src={currentProject.mobileImage}
+                      alt={`${currentProject.name} Mobile Website`}
+                      fill
+                      priority
+                      className="object-cover object-top"
+                      sizes="(max-width: 768px) 35vw, 200px"
+                    />
+
+                    {/* Mobile Header Bar Overlay */}
+                    <div className="absolute top-0 inset-x-0 bg-gradient-to-b from-black/85 to-transparent p-2.5 sm:p-3 pt-5 text-white z-20 flex items-center justify-between pointer-events-none">
+                      <span className="text-[8px] sm:text-[10px] font-serif font-semibold tracking-wider uppercase truncate max-w-[70px]">
+                        {currentProject.name}
+                      </span>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="w-3 sm:w-4 h-[1px] bg-white rounded-full" />
+                        <span className="w-3 sm:w-4 h-[1px] bg-white rounded-full" />
+                      </div>
+                    </div>
+
+                    {/* Mobile Specular Glass Reflection */}
+                    <div
+                      className="absolute inset-0 pointer-events-none z-20"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 46%)",
+                      }}
+                    />
                   </div>
                 </div>
 
-                {/* Mobile Glass Reflection */}
-                <div
-                  className="absolute inset-0 pointer-events-none z-20"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 45%)",
-                  }}
-                />
+                {/* Home Bar Indicator */}
+                <div className="absolute bottom-[5px] sm:bottom-[7px] left-1/2 -translate-x-1/2 w-12 sm:w-16 h-[2.5px] bg-white/45 rounded-full" />
               </div>
             </div>
-
-            {/* Home Bar Indicator */}
-            <div className="absolute bottom-[4px] sm:bottom-[6px] left-1/2 -translate-x-1/2 w-10 sm:w-14 h-[2px] bg-white/40 rounded-full" />
           </div>
         </div>
       </div>
 
       {/* ========================================================
-          3. NATURAL SLATE ROCK LEDGE PEDESTAL (Matches Reference)
+          3. NATURAL SLATE ROCK LEDGE PEDESTAL (Grounding Depth)
          ======================================================== */}
-      <div className="relative -mt-2 sm:-mt-4 w-full z-0 overflow-hidden">
+      <div className="relative -mt-2 sm:-mt-5 w-full z-0 overflow-hidden pointer-events-none">
         {/* Deep ambient drop shadow into background */}
-        <div className="absolute inset-x-4 top-2 h-7 sm:h-10 bg-[#5E3023]/25 blur-2xl rounded-full" />
-        <div className="absolute inset-x-12 top-4 h-5 sm:h-7 bg-[#2a1711]/30 blur-xl rounded-full" />
+        <div className="absolute inset-x-6 top-2 h-8 sm:h-12 bg-[#5E3023]/25 blur-2xl rounded-full" />
+        <div className="absolute inset-x-14 top-4 h-6 sm:h-8 bg-[#2a1711]/30 blur-xl rounded-full" />
 
         {/* Natural Rock Ledge Graphic */}
         <svg
           viewBox="0 0 800 48"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto drop-shadow-lg"
+          className="w-full h-auto drop-shadow-md"
           preserveAspectRatio="none"
         >
           {/* Main Rock Base Body with Slate Gradient */}
@@ -167,7 +340,7 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
             fill="url(#rockSlateGrad)"
           />
 
-          {/* Top Sunlit Rim Highlight (Warm Desert Sand / Golden Chestnut Light) */}
+          {/* Top Sunlit Rim Highlight (Warm Desert Sand / Golden Light) */}
           <path
             d="M 14 18 
                Q 60 14, 140 16 
@@ -196,7 +369,6 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
           />
 
           <defs>
-            {/* Rock Base Multi-stop Slate Color */}
             <linearGradient id="rockSlateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#3d3530" />
               <stop offset="25%" stopColor="#2c2522" />
@@ -205,7 +377,6 @@ export function DeviceMockup({ project }: DeviceMockupProps) {
               <stop offset="100%" stopColor="#1e1a18" />
             </linearGradient>
 
-            {/* Sunlight Rim Gradient */}
             <linearGradient id="rockRimLight" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#DAB49D" stopOpacity="0.4" />
               <stop offset="30%" stopColor="#F3E9DC" stopOpacity="0.9" />
