@@ -269,6 +269,114 @@
   animation: lineGrow 0.8s var(--ease-out) forwards;
 }
 
+/* Device & Project Showcase Animations */
+@keyframes deviceFade {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes contentSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Idle Floating Animations (Section 9) */
+@keyframes laptopFloatIdle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(0.18deg);
+  }
+}
+
+@keyframes phoneFloatIdle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-0.25deg);
+  }
+}
+
+.animate-laptop-float {
+  animation: laptopFloatIdle 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-phone-float {
+  animation: phoneFloatIdle 5.2s ease-in-out infinite;
+  animation-delay: -1.8s;
+  will-change: transform;
+}
+
+/* Screenshot cross-scale transitions (Section 10 & 23) */
+@keyframes screenEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes screenExit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+.animate-screen-enter {
+  animation: screenEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-screen-exit {
+  animation: screenExit 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Reduced motion support (Section 29) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-laptop-float,
+  .animate-phone-float,
+  .animate-screen-enter,
+  .animate-screen-exit,
+  .animate-device-fade,
+  .animate-content-slide {
+    animation: none !important;
+    transform: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+}
+
+.animate-device-fade {
+  animation: deviceFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-content-slide {
+  animation: contentSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* ===================================================================
    CARDS & SURFACES
    =================================================================== */
