@@ -5,18 +5,16 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useState } from "react";
 
 const trustPoints = [
-  { title: "You'll work with me", desc: "No handoffs. No account managers." },
-  { title: "Fast, personal response", desc: "I'll get back to you soon." },
-  { title: "Focused on results", desc: "Everything is built around your goals." },
+  { title: "Direct 1-on-1 collaboration", desc: "You'll work directly with me from day one." },
+  { title: "Fast response", desc: "I'll review your site and get back to you promptly." },
+  { title: "Zero pressure", desc: "An honest conversation focused on real results." },
 ];
 
 export function Contact() {
   const ref = useScrollReveal();
   const [formState, setFormState] = useState({
-    name: "",
     email: "",
     phone: "",
-    message: "",
   });
   const [submitted, setSubmitted] = useState(false);
 
@@ -33,13 +31,12 @@ export function Contact() {
           {/* Left */}
           <div className="lg:col-span-5">
 
-
             <h2 className="reveal reveal-delay-1 text-section-heading mb-6">
-              Let's build something<br />great together.
+              Like the sites I build?<br />Let's fix your score.
             </h2>
 
             <p className="reveal reveal-delay-2 text-body-large mb-12">
-              Tell me a little about your business and what you're looking to achieve. I'll personally review your message and get back to you.
+              Whether you loved the recent work or want to take your site’s audit score to the next level—just drop your email or number. No endless questionnaires, just a quick hello to get going.
             </p>
 
             {/* Trust Points */}
@@ -73,80 +70,63 @@ export function Contact() {
           <div className="lg:col-span-7">
             <div className="reveal bg-[#FFFDF9] border border-[#E8E5DE] rounded-[var(--radius-lg)] p-8 lg:p-10">
               {submitted ? (
-                <div className="flex flex-col items-center justify-center text-center py-16">
-                  <h3 className="font-serif text-[28px] text-[#18202A] mb-3">Message sent.</h3>
+                <div className="flex flex-col items-center justify-center text-center py-14">
+                  <h3 className="font-serif text-[28px] text-[#18202A] mb-3">Thanks for reaching out!</h3>
                   <p className="text-body max-w-sm">
-                    Thank you for reaching out. I'll review your message and get back to you soon.
+                    I've received your info and will reach out shortly to talk about your site.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                   <div>
-                    <label htmlFor="contact-name" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
-                      Your Name
-                    </label>
-                    <input
-                      id="contact-name"
-                      type="text"
-                      required
-                      value={formState.name}
-                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                      className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 transition-all"
-                      placeholder="John Smith"
-                    />
+                    <h3 className="font-serif text-[22px] md:text-[24px] text-[#18202A] mb-1">
+                      Ready to get going?
+                    </h3>
+                    <p className="text-[14px] text-[#77736B]">
+                      Drop your email or number below and I'll personally be in touch.
+                    </p>
                   </div>
 
-                  <div>
-                    <label htmlFor="contact-email" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
-                      Email Address
-                    </label>
-                    <input
-                      id="contact-email"
-                      type="email"
-                      required
-                      value={formState.email}
-                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                      className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 transition-all"
-                      placeholder="john@example.com"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="contact-email" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
+                        Email Address <span className="text-[#B9684A]">*</span>
+                      </label>
+                      <input
+                        id="contact-email"
+                        type="email"
+                        required
+                        value={formState.email}
+                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                        className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 transition-all focus:border-[#18202A] focus:outline-none"
+                        placeholder="you@company.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="contact-phone" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
+                        Phone Number
+                      </label>
+                      <input
+                        id="contact-phone"
+                        type="tel"
+                        value={formState.phone}
+                        onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                        className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 transition-all focus:border-[#18202A] focus:outline-none"
+                        placeholder="(231) 555-0199"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="contact-phone" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
-                      Phone Number
-                    </label>
-                    <input
-                      id="contact-phone"
-                      type="tel"
-                      value={formState.phone}
-                      onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                      className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 transition-all"
-                      placeholder="(231) 555-1234"
-                    />
+                  <div className="pt-2">
+                    <button type="submit" className="btn-primary w-full sm:w-auto justify-center">
+                      Say Hi & Get Going
+                      <ArrowRight className="w-4 h-4 arrow-icon" />
+                    </button>
                   </div>
-
-                  <div>
-                    <label htmlFor="contact-message" className="block text-[13px] font-semibold text-[#18202A] mb-2 tracking-[0.02em]">
-                      Tell me about your business and goals
-                    </label>
-                    <textarea
-                      id="contact-message"
-                      required
-                      rows={5}
-                      value={formState.message}
-                      onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                      className="w-full bg-[#F7F5F0] border border-[#D8D4CB] rounded-[var(--radius-md)] px-4 py-3.5 text-[15px] text-[#18202A] placeholder:text-[#9A968E]/70 resize-none transition-all"
-                      placeholder="I run a small business in Northern Michigan and I'm looking to..."
-                    />
-                  </div>
-
-                  <button type="submit" className="btn-primary w-full sm:w-auto justify-center">
-                    Send Message
-                    <ArrowRight className="w-4 h-4 arrow-icon" />
-                  </button>
 
                   <p className="text-[12px] text-[#9A968E] leading-[1.5]">
-                    Your information is safe with me. I respect your privacy and will never share your information.
+                    No spam, ever. Just direct communication about your website and business goals.
                   </p>
                 </form>
               )}
