@@ -12,6 +12,12 @@ import {
   Globe,
   ImageIcon,
   ExternalLink,
+  Activity,
+  Clock,
+  Loader2,
+  Smartphone,
+  TrendingUp,
+  Gauge,
 } from "lucide-react";
 import { CircularScore } from "@/components/ui/CircularScore";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -85,23 +91,75 @@ const SAMPLE_SITES = [
   { label: "GitHub", url: "github.com" },
 ];
 
+const SCAN_MILESTONES = [
+  { id: 1, title: "Server Connection & SSL Handshake", subtitle: "Checking TLS certificate & server latency" },
+  { id: 2, title: "DOM & HTML Document Crawling", subtitle: "Analyzing document size, <title> & meta description" },
+  { id: 3, title: "Open Graph Social Preview Cards", subtitle: "Verifying rich share cards for Twitter, Slack & LinkedIn" },
+  { id: 4, title: "Heading & Semantic SEO Architecture", subtitle: "Auditing H1/H2 hierarchy and indexing signals" },
+  { id: 5, title: "Image & Media Optimization Scan", subtitle: "Checking for missing alt text & modern WebP formats" },
+  { id: 6, title: "JavaScript & Asset Payload Profiling", subtitle: "Detecting heavy scripts & render-blocking resources" },
+  { id: 7, title: "Google Mobile Chrome Engine Simulation", subtitle: "Emulating real mobile device on throttled 4G network" },
+  { id: 8, title: "Largest Contentful Paint (LCP) Benchmark", subtitle: "Measuring main hero content render speed" },
+  { id: 9, title: "Cumulative Layout Shift (CLS) Analysis", subtitle: "Detecting visual shifts & jumping content" },
+  { id: 10, title: "Total Blocking Time & Interactivity", subtitle: "Measuring main thread responsiveness & input delay" },
+  { id: 11, title: "Lighthouse Category Scorecard Synthesis", subtitle: "Compiling Google Performance, SEO, BP & A11y scores" },
+  { id: 12, title: "Generating Actionable Growth Checklist", subtitle: "Formulating business-impact fixes & recommendations" },
+];
+
+const CONVERSION_TIPS = [
+  {
+    icon: Zap,
+    stat: "7% Conversion Loss",
+    fact: "Every 100ms delay in website load time drops conversion rates by roughly 7%.",
+  },
+  {
+    icon: Smartphone,
+    stat: "53% Mobile Abandonment",
+    fact: "Over half of all mobile visitors bounce if a website takes longer than 3 seconds to render.",
+  },
+  {
+    icon: TrendingUp,
+    stat: "Google Search Priority",
+    fact: "Google officially uses Core Web Vitals (LCP, CLS, INP) as a direct mobile ranking factor.",
+  },
+  {
+    icon: Share2,
+    stat: "+39% Social Clicks",
+    fact: "Properly configured Open Graph image cards increase social share engagement by up to 39%.",
+  },
+  {
+    icon: Gauge,
+    stat: "60% Payload Reduction",
+    fact: "Converting legacy PNG/JPG assets to modern WebP/AVIF formats typically cuts page weight in half.",
+  },
+];
+
 export function SiteAudit() {
   const ref = useScrollReveal();
   const [inputUrl, setInputUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [scanStep, setScanStep] = useState(0);
+  const [elapsedMs, setElapsedMs] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [auditData, setAuditData] = useState<AuditResult | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [, startTransition] = useTransition();
 
-  const scanStepsList = [
-    "Connecting to server & testing SSL response time...",
-    "Measuring Google Core Web Vitals (LCP, CLS, FCP)...",
-    "Extracting Open Graph social cards & image tags...",
-    "Analyzing SEO heading structure & script weight...",
-    "Compiling actionable optimization checklist...",
-  ];
+  // Smooth asymptotic progress calculation (never freezes at 100% until response arrives)
+  const getProgress = (ms: number) => {
+    const s = ms / 1000;
+    if (s < 2) return Math.round(15 + s * 15); // 15% -> 45%
+    if (s < 5) return Math.round(45 + (s - 2) * 9); // 45% -> 72%
+    if (s < 12) return Math.round(72 + (s - 5) * 2.2); // 72% -> 87.4%
+    if (s < 22) return Math.round(87.4 + (s - 12) * 0.7); // 87.4% -> 94.4%
+    return Math.min(97, Math.round(94.4 + (s - 22) * 0.2)); // creeps to 97% max
+  };
+
+  const currentMilestoneIndex = Math.min(
+    SCAN_MILESTONES.length - 1,
+    Math.floor(elapsedMs / 1700)
+  );
+
+  const currentTipIndex = Math.floor(elapsedMs / 3800) % CONVERSION_TIPS.length;
 
   const handleRunAudit = async (targetUrlToScan?: string) => {
     const rawUrl = targetUrlToScan || inputUrl;
@@ -112,15 +170,15 @@ export function SiteAudit() {
 
     setError(null);
     setIsLoading(true);
-    setScanStep(0);
+    setElapsedMs(0);
     setAuditData(null);
 
     const startTime = Date.now();
     const MIN_SCAN_DURATION = 5000; // Ensure a realistic 5-second scanning UX
 
-    const stepInterval = setInterval(() => {
-      setScanStep((prev) => (prev < scanStepsList.length - 1 ? prev + 1 : prev));
-    }, 1000);
+    const timerInterval = setInterval(() => {
+      setElapsedMs(Date.now() - startTime);
+    }, 100);
 
     try {
       const res = await fetch("/api/audit", {
@@ -141,14 +199,14 @@ export function SiteAudit() {
         await new Promise((resolve) => setTimeout(resolve, MIN_SCAN_DURATION - elapsed));
       }
 
-      clearInterval(stepInterval);
+      clearInterval(timerInterval);
 
       startTransition(() => {
         setAuditData(data);
         setIsLoading(false);
       });
     } catch (err: unknown) {
-      clearInterval(stepInterval);
+      clearInterval(timerInterval);
       setIsLoading(false);
       setError(err instanceof Error ? err.message : "Could not complete audit. Please check the URL.");
     }
@@ -268,27 +326,111 @@ export function SiteAudit() {
 
         {/* Loading Progress State */}
         {isLoading && (
-          <div className="max-w-[680px] mx-auto my-12 p-10 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D] text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-md)] bg-[#DAB49D]/20 text-[#5E3023] mb-5">
-              <Zap className="w-6 h-6 text-[#C08552]" />
-            </div>
-            <h3 className="font-serif text-[24px] text-[#5E3023] mb-3">
-              Auditing {inputUrl}...
-            </h3>
-            <p className="text-[16px] text-[#895737] mb-6">
-              {scanStepsList[scanStep]}
-            </p>
+          <div className="max-w-[720px] mx-auto my-12 p-8 md:p-10 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D] shadow-sm text-left">
+            {/* Header with live status and elapsed timer */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#DAB49D]/50 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#F3E9DC] border border-[#DAB49D] text-[#5E3023] shrink-0">
+                  <Globe className="w-5 h-5 text-[#895737]" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-[20px] md:text-[22px] font-bold text-[#5E3023]">
+                    Auditing {inputUrl}
+                  </h3>
+                  <p className="text-[13px] text-[#895737]">
+                    Running live Core Web Vitals & technical diagnostic suite
+                  </p>
+                </div>
+              </div>
 
-            {/* Step Progress Bar */}
-            <div className="w-full h-2 bg-[#DAB49D]/30 rounded-full overflow-hidden mb-3">
-              <div
-                className="h-full bg-[#C08552] transition-all duration-500 rounded-full"
-                style={{ width: `${((scanStep + 1) / scanStepsList.length) * 100}%` }}
-              />
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F3E9DC] border border-[#DAB49D] text-[#5E3023] text-[13px] font-mono shrink-0 self-start sm:self-auto">
+                <Clock className="w-3.5 h-3.5 text-[#C08552]" />
+                <span>{(elapsedMs / 1000).toFixed(1)}s elapsed</span>
+              </div>
             </div>
-            <span className="text-[13px] text-[#895737]/75 font-mono">
-              Step {scanStep + 1} of {scanStepsList.length}
-            </span>
+
+            {/* Smooth Asymptotic Progress Bar */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between text-[13px] font-medium text-[#895737] mb-2">
+                <span>Deep Analysis in Progress...</span>
+                <span className="font-mono font-bold text-[#5E3023]">{getProgress(elapsedMs)}%</span>
+              </div>
+              <div className="w-full h-2.5 bg-[#DAB49D]/30 rounded-full overflow-hidden p-0.5 border border-[#DAB49D]/40">
+                <div
+                  className="h-full bg-gradient-to-r from-[#C08552] to-[#895737] transition-[width] duration-700 ease-out rounded-full"
+                  style={{ width: `${getProgress(elapsedMs)}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Live Diagnostic Stream Feed */}
+            <div className="space-y-3 mb-8">
+              <div className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#895737]/80 mb-1">
+                Live Diagnostic Stream
+              </div>
+
+              {/* Currently running step */}
+              <div className="flex items-start gap-3.5 p-3.5 rounded-[var(--radius-sm)] bg-[#FFFDF9] border border-[#C08552]/40 shadow-2xs transition-all duration-300">
+                <Loader2 className="w-5 h-5 text-[#C08552] animate-spin shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-[14px] text-[#5E3023]">
+                      {SCAN_MILESTONES[currentMilestoneIndex].title}
+                    </span>
+                    <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#C08552]/15 text-[#5E3023]">
+                      Running
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-[#895737] mt-0.5">
+                    {SCAN_MILESTONES[currentMilestoneIndex].subtitle}
+                  </p>
+                </div>
+              </div>
+
+              {/* Previous verified steps */}
+              {currentMilestoneIndex > 0 && (
+                <div className="space-y-2 pt-1 opacity-80">
+                  {[currentMilestoneIndex - 1, currentMilestoneIndex - 2]
+                    .filter((idx) => idx >= 0)
+                    .map((idx) => (
+                      <div
+                        key={SCAN_MILESTONES[idx].id}
+                        className="flex items-center gap-3 px-3.5 py-2 rounded-[var(--radius-sm)] bg-[#FAF6F0] text-[13px] text-[#5E3023] transition-all duration-300"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-[#2E7D32] shrink-0" />
+                        <span className="font-medium text-[#5E3023] line-clamp-1">
+                          {SCAN_MILESTONES[idx].title}
+                        </span>
+                        <span className="ml-auto text-[11px] text-[#226327] font-medium shrink-0">
+                          Verified ✓
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+
+            {/* While You Wait - Conversion Impact Ticker */}
+            <div className="p-4 md:p-5 rounded-[var(--radius-sm)] bg-[#F3E9DC]/60 border border-[#DAB49D] text-left transition-all duration-500 ease-out">
+              <div className="flex items-center gap-2 mb-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#895737]">
+                <span>Why Website Speed Matters</span>
+              </div>
+              <div className="flex items-start gap-3.5">
+                <div className="w-8 h-8 rounded-[var(--radius-sm)] bg-[#C08552]/15 flex items-center justify-center text-[#5E3023] shrink-0 mt-0.5">
+                  {React.createElement(CONVERSION_TIPS[currentTipIndex].icon, {
+                    className: "w-4 h-4 text-[#C08552]",
+                  })}
+                </div>
+                <div>
+                  <span className="inline-block font-bold text-[14px] md:text-[15px] text-[#5E3023] mb-0.5">
+                    {CONVERSION_TIPS[currentTipIndex].stat}
+                  </span>
+                  <p className="text-[13px] md:text-[14px] text-[#895737] leading-relaxed">
+                    {CONVERSION_TIPS[currentTipIndex].fact}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

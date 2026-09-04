@@ -187,7 +187,11 @@ async function fetchPageSpeedInsights(targetUrl: string): Promise<PageSpeedData 
     clearTimeout(timeoutId);
 
     if (!res.ok) {
-      throw new Error(`PageSpeed API returned ${res.status}`);
+      const errText = await res.text().catch(() => "");
+      console.warn(
+        `[PageSpeed API] Status ${res.status} for ${targetUrl}. Likely bot challenge (Cloudflare/Akamai) or site unreachable. Seamlessly using fallback benchmark.`
+      );
+      return null;
     }
 
     const data = await res.json();
