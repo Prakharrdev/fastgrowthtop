@@ -37,12 +37,12 @@ export function CircularScore({
 
   // Brand Palette Tiers:
   // - 90-100: Olive Green (#2E7D32)
-  // - 50-89: Brand Ochre (#C99A3A)
-  // - 0-49: Brand Terracotta (#B9684A)
-  let color = "#B9684A"; // Terracotta
-  let trackColor = "#F2E8E4";
-  let textColor = "text-[#B9684A]";
-  let bgBadge = "bg-[#FAF0EC] text-[#9A4C32] border-[#EBD0C6]";
+  // - 50-89: Brand Golden Chestnut (#C08552)
+  // - 0-49: Brand Espresso / Toffee (#895737)
+  let color = "#895737"; // Toffee Brown / Espresso
+  let trackColor = "#F3E9DC";
+  let textColor = "text-[#895737]";
+  let bgBadge = "bg-[#DAB49D]/25 text-[#5E3023] border-[#DAB49D]";
   let statusText = "Needs Rebuild";
 
   if (score >= 90) {
@@ -52,10 +52,10 @@ export function CircularScore({
     bgBadge = "bg-[#EDF7EE] text-[#226327] border-[#CBE5CF]";
     statusText = "Fast & Healthy";
   } else if (score >= 50) {
-    color = "#C99A3A"; // Ochre Gold
-    trackColor = "#F6EEE0";
-    textColor = "text-[#A37822]";
-    bgBadge = "bg-[#FAF5EC] text-[#8C661A] border-[#EBD8B2]";
+    color = "#C08552"; // Golden Chestnut
+    trackColor = "#F3E9DC";
+    textColor = "text-[#C08552]";
+    bgBadge = "bg-[#C08552]/15 text-[#5E3023] border-[#C08552]/40";
     statusText = "Needs Work";
   }
 
@@ -67,12 +67,12 @@ export function CircularScore({
     <div
       className={`flex flex-col items-center justify-center p-6 rounded-[var(--radius-md)] border transition-all ${
         isFeatured
-          ? "bg-[#FFFDF9] border-[#C99A3A]/60 shadow-[0_4px_16px_rgba(201,154,58,0.1)] ring-1 ring-[#C99A3A]/20"
-          : "bg-[#FFFDF9] border-[#D8D4CB]"
+          ? "bg-[#FAF6F0] border-[#C08552]/60 shadow-[0_4px_16px_rgba(192,133,82,0.12)] ring-1 ring-[#C08552]/20"
+          : "bg-[#FAF6F0] border-[#DAB49D]"
       }`}
     >
       {isFeatured && (
-        <span className="text-[11px] uppercase tracking-[0.1em] font-semibold text-[#C99A3A] mb-3 font-sans">
+        <span className="text-[11px] uppercase tracking-[0.1em] font-semibold text-[#C08552] mb-3 font-sans">
           Overall Health Score
         </span>
       )}
@@ -112,13 +112,13 @@ export function CircularScore({
           >
             {animatedScore}
           </span>
-          <span className="text-[12px] text-[#77736B] font-mono mt-1">/100</span>
+          <span className="text-[12px] text-[#895737] font-mono mt-1">/100</span>
         </div>
       </div>
 
       {/* Label and Badge */}
       <div className="mt-4 text-center">
-        <h4 className="text-[14px] font-semibold text-[#18202A] tracking-[0.04em] uppercase font-sans">
+        <h4 className="text-[14px] font-semibold text-[#5E3023] tracking-[0.04em] uppercase font-sans">
           {label}
         </h4>
         <span

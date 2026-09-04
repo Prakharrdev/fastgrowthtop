@@ -9,7 +9,7 @@ import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F5F0]">
+    <div className="min-h-screen flex flex-col bg-[#F3E9DC]">
       <Header />
       <main className="flex-grow">
         {/* 01 — Hero */}

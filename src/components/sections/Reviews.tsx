@@ -44,7 +44,7 @@ function StarRating({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`w-3.5 h-3.5 ${i < rating ? "fill-[#C99A3A] text-[#C99A3A]" : "text-[#D8D4CB]"}`}
+          className={`w-3.5 h-3.5 ${i < rating ? "fill-[#C08552] text-[#C08552]" : "text-[#DAB49D]"}`}
         />
       ))}
     </div>
@@ -114,14 +114,14 @@ export function Reviews() {
           </div>
 
           {/* Google Rating Badge */}
-          <div className="reveal bg-[#FFFDF9] border border-[#E8E5DE] rounded-[var(--radius-lg)] px-6 py-4 flex items-center gap-4">
+          <div className="reveal bg-[#FAF6F0] border border-[#DAB49D]/60 rounded-[var(--radius-lg)] px-6 py-4 flex items-center gap-4">
             <GoogleLogo />
             <div>
               <div className="flex items-center gap-2.5 mb-0.5">
-                <span className="font-serif text-[24px] text-[#18202A]">5.0</span>
+                <span className="font-serif text-[24px] text-[#5E3023]">5.0</span>
                 <StarRating rating={5} />
               </div>
-              <span className="text-[12px] text-[#9A968E]">Based on Google Reviews</span>
+              <span className="text-[12px] text-[#895737]/75">Based on Google Reviews</span>
             </div>
           </div>
         </div>
@@ -142,8 +142,8 @@ export function Reviews() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-5">
                     <div>
-                      <h4 className="text-[15px] font-semibold text-[#18202A]">{review.name}</h4>
-                      <span className="text-[12px] text-[#9A968E]">{review.business}</span>
+                      <h4 className="text-[15px] font-semibold text-[#5E3023]">{review.name}</h4>
+                      <span className="text-[12px] text-[#895737]/75">{review.business}</span>
                     </div>
                     <GoogleLogo />
                   </div>
@@ -154,12 +154,12 @@ export function Reviews() {
                   </div>
 
                   {/* Text */}
-                  <p className="text-[14px] text-[#77736B] leading-[1.6] flex-grow mb-6">
+                  <p className="text-[14px] text-[#895737] leading-[1.6] flex-grow mb-6">
                     "{review.text}"
                   </p>
 
                   {/* Link */}
-                  <a href="#" className="link-arrow text-[12px] text-[#9A968E] hover:text-[#18202A] mt-auto">
+                  <a href="#" className="link-arrow text-[12px] text-[#895737]/75 hover:text-[#5E3023] mt-auto">
                     View on Google
                     <ExternalLink className="w-3 h-3 arrow-icon" />
                   </a>
@@ -192,8 +192,8 @@ export function Reviews() {
         </div>
 
         {/* CTA Strip */}
-        <div className="reveal mt-20 bg-[#F0EDE6]/60 rounded-[var(--radius-lg)] py-10 px-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
-          <p className="font-serif text-[22px] text-[#18202A]">
+        <div className="reveal mt-20 bg-[#DAB49D]/20 rounded-[var(--radius-lg)] py-10 px-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
+          <p className="font-serif text-[22px] text-[#5E3023]">
             Ready to get results like these?
           </p>
           <a href="#contact" className="btn-primary text-[13px]">

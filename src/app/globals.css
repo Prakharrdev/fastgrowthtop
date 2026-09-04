@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-linen: #F3E9DC;
+  --color-golden-chestnut: #C08552;
+  --color-espresso: #5E3023;
+  --color-toffee-brown: #895737;
+  --color-desert-sand: #DAB49D;
+}
+
 /* ===================================================================
    SCHRADER.CO — DESIGN SYSTEM
    Warm editorial palette · Serif/Sans typography · No blue
@@ -7,23 +15,30 @@
 
 @layer base {
   :root {
-    /* — Color System — */
-    --ink: #18202A;
-    --ink-soft: #2A3240;
+    /* — Official Brand Palette — */
+    --linen: #F3E9DC;
+    --golden-chestnut: #C08552;
+    --espresso: #5E3023;
+    --toffee-brown: #895737;
+    --desert-sand: #DAB49D;
+
+    /* — Core Semantic System Mapped to Brand Palette — */
+    --ink: #5E3023;                     /* Espresso — for primary headings & contrast elements */
+    --ink-soft: #482319;                /* Darker espresso for hover states */
     
-    --ivory: #F7F5F0;
-    --warm-white: #FFFDF9;
-    --cream: #F0EDE6;
+    --ivory: #F3E9DC;                   /* Linen — base background */
+    --warm-white: #FAF6F0;              /* Warm elevated surface / card fill */
+    --cream: #EFE4D6;                   /* Subtle desert sand/linen blend */
     
-    --stone: #77736B;
-    --stone-light: #9A968E;
+    --stone: #895737;                   /* Toffee Brown — body & secondary text */
+    --stone-light: #A5785C;             /* Muted toffee for tertiary labels */
     
-    --border: #D8D4CB;
-    --border-light: #E8E5DE;
+    --border: #DAB49D;                  /* Desert Sand — primary border */
+    --border-light: rgba(218, 180, 157, 0.45); /* Soft desert sand for inner dividers */
     
-    --ochre: #C99A3A;
-    --ochre-soft: rgba(201, 154, 58, 0.12);
-    --terracotta: #B9684A;
+    --ochre: #C08552;                   /* Golden Chestnut — accents & highlights */
+    --ochre-soft: rgba(192, 133, 82, 0.14);
+    --terracotta: #C08552;              /* Golden Chestnut */
     
     /* — Typography — */
     --font-body: var(--font-inter), system-ui, -apple-system, sans-serif;
@@ -39,9 +54,9 @@
     --radius-lg: 10px;
     
     /* — Shadows — */
-    --shadow-sm: 0 2px 8px rgba(24, 32, 42, 0.04);
-    --shadow-md: 0 8px 24px rgba(24, 32, 42, 0.06);
-    --shadow-lg: 0 16px 48px rgba(24, 32, 42, 0.08);
+    --shadow-sm: 0 2px 8px rgba(94, 48, 35, 0.04);
+    --shadow-md: 0 8px 24px rgba(94, 48, 35, 0.07);
+    --shadow-lg: 0 16px 48px rgba(94, 48, 35, 0.10);
     
     /* — Transitions — */
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -449,7 +464,7 @@ input, textarea {
 input:focus, textarea:focus {
   outline: none;
   border-color: var(--ink) !important;
-  box-shadow: 0 0 0 2px rgba(24, 32, 42, 0.08);
+  box-shadow: 0 0 0 2px rgba(94, 48, 35, 0.12);
 }
 
 /* ===================================================================
