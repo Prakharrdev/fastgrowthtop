@@ -167,10 +167,10 @@ export function SiteAudit() {
         <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-10">
           {/* Goal Statement */}
           <div className="reveal mb-8 max-w-[640px]">
-            <p className="font-serif text-[22px] md:text-[26px] text-[#18202A] leading-snug mb-2 font-medium">
+            <p className="font-serif text-[22px] md:text-[26px] text-[#5E3023] leading-snug mb-2 font-medium">
               The goal is simple: more customers and less stress.
             </p>
-            <p className="text-[18px] md:text-[21px] text-[#77736B] leading-[1.6]">
+            <p className="text-[18px] md:text-[21px] text-[#895737] leading-[1.6]">
               I handle the digital so you can focus on your business.
             </p>
           </div>
@@ -179,7 +179,7 @@ export function SiteAudit() {
             Is your website losing clients before it even loads?
           </h2>
 
-          <p className="reveal reveal-delay-2 text-[19px] md:text-[21px] text-[#77736B] leading-[1.6] max-w-[760px]">
+          <p className="reveal reveal-delay-2 text-[19px] md:text-[21px] text-[#895737] leading-[1.6] max-w-[760px]">
             Put in your domain name. We'll run a real-time <strong>Lighthouse & Speed Audit</strong> to benchmark Core Web Vitals, check for missing Open Graph social cards, and pinpoint SEO bottlenecks.
           </p>
 
@@ -191,9 +191,9 @@ export function SiteAudit() {
             }}
             className="reveal reveal-delay-3 w-full mt-10 max-w-[700px]"
           >
-            <div className="flex flex-col sm:flex-row items-stretch gap-3 p-2 bg-[#FFFDF9] rounded-[var(--radius-md)] border border-[#D8D4CB] focus-within:border-[#18202A] transition-all">
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 p-2 bg-[#FAF6F0] rounded-[var(--radius-md)] border border-[#DAB49D] focus-within:border-[#5E3023] transition-all">
               <div className="flex items-center flex-1 px-4 gap-3 min-w-0">
-                <Globe className="w-5 h-5 text-[#9A968E] shrink-0" />
+                <Globe className="w-5 h-5 text-[#895737]/75 shrink-0" />
                 <input
                   type="text"
                   value={inputUrl}
@@ -202,7 +202,7 @@ export function SiteAudit() {
                     if (error) setError(null);
                   }}
                   placeholder="Enter your website URL (e.g. yourbusiness.com)"
-                  className="w-full bg-transparent text-[16px] md:text-[17px] text-[#18202A] placeholder:text-[#9A968E]/70 outline-none font-sans py-3"
+                  className="w-full bg-transparent text-[16px] md:text-[17px] text-[#5E3023] placeholder:text-[#895737]/60 outline-none font-sans py-3"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export function SiteAudit() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 text-[#C99A3A]" />
+                    <Sparkles className="w-4 h-4 text-[#C08552]" />
                     <span>Run Audit</span>
                   </>
                 )}
@@ -226,8 +226,8 @@ export function SiteAudit() {
             </div>
 
             {/* Quick Sample Presets */}
-            <div className="flex items-center justify-center flex-wrap gap-2.5 mt-4 text-[14px] text-[#77736B]">
-              <span className="text-[12px] uppercase tracking-[0.08em] font-semibold text-[#9A968E]">Try an example:</span>
+            <div className="flex items-center justify-center flex-wrap gap-2.5 mt-4 text-[14px] text-[#895737]">
+              <span className="text-[12px] uppercase tracking-[0.08em] font-semibold text-[#895737]/75">Try an example:</span>
               {SAMPLE_SITES.map((sample) => (
                 <button
                   key={sample.url}
@@ -236,7 +236,7 @@ export function SiteAudit() {
                     setInputUrl(sample.url);
                     handleRunAudit(sample.url);
                   }}
-                  className="px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[#F0EDE6] text-[#18202A] hover:bg-[#18202A] hover:text-[#F7F5F0] border border-[#D8D4CB] transition-all text-[13px] font-medium cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[#DAB49D]/25 text-[#5E3023] hover:bg-[#5E3023] hover:text-[#F3E9DC] border border-[#DAB49D] transition-all text-[13px] font-medium cursor-pointer"
                 >
                   {sample.label}
                 </button>
@@ -244,8 +244,8 @@ export function SiteAudit() {
             </div>
 
             {error && (
-              <div className="mt-4 p-4 bg-[#FAF0EC] border border-[#EBD0C6] text-[#9A4C32] text-[15px] rounded-[var(--radius-md)] flex items-center gap-3 justify-center">
-                <AlertTriangle className="w-5 h-5 shrink-0 text-[#B9684A]" />
+              <div className="mt-4 p-4 bg-[#DAB49D]/20 border border-[#DAB49D] text-[#5E3023] text-[15px] rounded-[var(--radius-md)] flex items-center gap-3 justify-center">
+                <AlertTriangle className="w-5 h-5 shrink-0 text-[#C08552]" />
                 <span>{error}</span>
               </div>
             )}
@@ -254,25 +254,25 @@ export function SiteAudit() {
 
         {/* Loading Progress State */}
         {isLoading && (
-          <div className="max-w-[680px] mx-auto my-12 p-10 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB] text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-md)] bg-[#F0EDE6] text-[#18202A] mb-5">
-              <Zap className="w-6 h-6 text-[#C99A3A]" />
+          <div className="max-w-[680px] mx-auto my-12 p-10 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D] text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-[var(--radius-md)] bg-[#DAB49D]/20 text-[#5E3023] mb-5">
+              <Zap className="w-6 h-6 text-[#C08552]" />
             </div>
-            <h3 className="font-serif text-[24px] text-[#18202A] mb-3">
+            <h3 className="font-serif text-[24px] text-[#5E3023] mb-3">
               Auditing {inputUrl}...
             </h3>
-            <p className="text-[16px] text-[#77736B] mb-6">
+            <p className="text-[16px] text-[#895737] mb-6">
               {scanStepsList[scanStep]}
             </p>
 
             {/* Step Progress Bar */}
-            <div className="w-full h-2 bg-[#E8E5DE] rounded-full overflow-hidden mb-3">
+            <div className="w-full h-2 bg-[#DAB49D]/30 rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-[#C99A3A] transition-all duration-500 rounded-full"
+                className="h-full bg-[#C08552] transition-all duration-500 rounded-full"
                 style={{ width: `${((scanStep + 1) / scanStepsList.length) * 100}%` }}
               />
             </div>
-            <span className="text-[13px] text-[#9A968E] font-mono">
+            <span className="text-[13px] text-[#895737]/75 font-mono">
               Step {scanStep + 1} of {scanStepsList.length}
             </span>
           </div>
@@ -283,13 +283,13 @@ export function SiteAudit() {
           <div className="space-y-14 mt-6">
             
             {/* Header info bar */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-[#FFFDF9] rounded-[var(--radius-md)] border border-[#D8D4CB] gap-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 bg-[#FAF6F0] rounded-[var(--radius-md)] border border-[#DAB49D] gap-4">
               <div className="flex items-center gap-4">
                 {auditData.seoMeta.favicon && (
                   <img
                     src={auditData.seoMeta.favicon}
                     alt="Favicon"
-                    className="w-10 h-10 rounded-[var(--radius-sm)] bg-[#F7F5F0] p-1.5 border border-[#D8D4CB] object-contain"
+                    className="w-10 h-10 rounded-[var(--radius-sm)] bg-[#F3E9DC] p-1.5 border border-[#DAB49D] object-contain"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
@@ -297,19 +297,19 @@ export function SiteAudit() {
                 )}
                 <div>
                   <div className="flex items-center gap-2.5">
-                    <h3 className="font-serif text-[22px] font-bold text-[#18202A]">
+                    <h3 className="font-serif text-[22px] font-bold text-[#5E3023]">
                       {auditData.domain}
                     </h3>
                     <a
                       href={auditData.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#9A968E] hover:text-[#18202A]"
+                      className="text-[#895737]/75 hover:text-[#5E3023]"
                     >
                       <ExternalLink className="w-4.5 h-4.5" />
                     </a>
                   </div>
-                  <p className="text-[14px] text-[#77736B] mt-0.5">
+                  <p className="text-[14px] text-[#895737] mt-0.5">
                     Audited {new Date(auditData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Powered by Google Lighthouse & Core Web Vitals
                   </p>
                 </div>
@@ -332,14 +332,14 @@ export function SiteAudit() {
                   <span className="label-eyebrow block mb-1">
                     01 / Lighthouse Category Scores & Overall Average
                   </span>
-                  <h3 className="font-serif text-[24px] text-[#18202A]">
+                  <h3 className="font-serif text-[24px] text-[#5E3023]">
                     Overall Site Health: <span className="font-bold">{averageScore}/100</span>
                   </h3>
                 </div>
-                <div className="flex items-center gap-4 text-[13px] text-[#77736B]">
+                <div className="flex items-center gap-4 text-[13px] text-[#895737]">
                   <span className="px-2 py-0.5 rounded bg-[#EDF7EE] text-[#226327] font-medium border border-[#CBE5CF]">90-100</span>
-                  <span className="px-2 py-0.5 rounded bg-[#FAF5EC] text-[#8C661A] font-medium border border-[#EBD8B2]">50-89</span>
-                  <span className="px-2 py-0.5 rounded bg-[#FAF0EC] text-[#9A4C32] font-medium border border-[#EBD0C6]">0-49</span>
+                  <span className="px-2 py-0.5 rounded bg-[#C08552]/15 text-[#5E3023] font-medium border border-[#C08552]/40">50-89</span>
+                  <span className="px-2 py-0.5 rounded bg-[#DAB49D]/25 text-[#5E3023] font-medium border border-[#DAB49D]">0-49</span>
                 </div>
               </div>
 
@@ -374,85 +374,85 @@ export function SiteAudit() {
               <span className="label-eyebrow block mb-2">
                 02 / Core Web Vitals & Speed Metrics (GTmetrix / Lighthouse)
               </span>
-              <h3 className="font-serif text-[22px] text-[#18202A] mb-5">
+              <h3 className="font-serif text-[22px] text-[#5E3023] mb-5">
                 Load speed & responsiveness benchmarks
               </h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
                 {/* LCP */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     LCP (Largest Paint)
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.lcp.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 2.5s
                   </span>
                 </div>
 
                 {/* FCP */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     FCP (First Paint)
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.fcp.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 1.8s
                   </span>
                 </div>
 
                 {/* CLS */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     CLS (Layout Shift)
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.cls.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 0.10
                   </span>
                 </div>
 
                 {/* TBT */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     TBT (Block Time)
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.tbt.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 200ms
                   </span>
                 </div>
 
                 {/* Speed Index */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     Speed Index
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.speedIndex.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 3.4s
                   </span>
                 </div>
 
                 {/* TTFB */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#9A968E] font-semibold block mb-1.5">
+                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
+                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
                     TTFB (Latency)
                   </span>
-                  <span className="font-serif text-[26px] text-[#18202A] font-bold block">
+                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
                     {auditData.metrics.ttfb.value}
                   </span>
-                  <span className="text-[13px] text-[#77736B] mt-1 block">
+                  <span className="text-[13px] text-[#895737] mt-1 block">
                     Target: &lt; 250ms
                   </span>
                 </div>
@@ -467,10 +467,10 @@ export function SiteAudit() {
                 <span className="label-eyebrow block">
                   03 / Social Open Graph & Share Preview
                 </span>
-                <h3 className="font-serif text-[26px] text-[#18202A] leading-snug">
+                <h3 className="font-serif text-[26px] text-[#5E3023] leading-snug">
                   How your site looks when shared on iMessage, LinkedIn & Twitter
                 </h3>
-                <p className="text-[16px] text-[#77736B] leading-[1.6]">
+                <p className="text-[16px] text-[#895737] leading-[1.6]">
                   Whenever someone texts your link or shares it on social media, platforms read your Open Graph meta tags. If your image or description is missing, it displays as an unclickable blank snippet.
                 </p>
 
@@ -480,9 +480,9 @@ export function SiteAudit() {
                     {auditData.openGraph.hasOgImage ? (
                       <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
                     ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#B9684A] shrink-0" />
+                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
                     )}
-                    <span className={auditData.openGraph.hasOgImage ? "text-[#18202A]" : "text-[#B9684A] font-semibold"}>
+                    <span className={auditData.openGraph.hasOgImage ? "text-[#5E3023]" : "text-[#C08552] font-semibold"}>
                       {auditData.openGraph.hasOgImage ? "Open Graph image configured" : "Missing og:image (high priority fix)"}
                     </span>
                   </div>
@@ -491,9 +491,9 @@ export function SiteAudit() {
                     {auditData.seoMeta.hasMetaDescription ? (
                       <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
                     ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#C99A3A] shrink-0" />
+                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
                     )}
-                    <span className="text-[#18202A]">
+                    <span className="text-[#5E3023]">
                       {auditData.seoMeta.hasMetaDescription
                         ? `Meta description present (${auditData.seoMeta.descriptionLength} chars)`
                         : "Missing meta description"}
@@ -504,9 +504,9 @@ export function SiteAudit() {
                     {auditData.pageStats.isHttps ? (
                       <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
                     ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#B9684A] shrink-0" />
+                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
                     )}
-                    <span className="text-[#18202A]">
+                    <span className="text-[#5E3023]">
                       {auditData.pageStats.isHttps ? "Secure SSL certificate active" : "Insecure HTTP protocol"}
                     </span>
                   </div>
@@ -515,23 +515,23 @@ export function SiteAudit() {
 
               {/* Right: Social Share Card Preview */}
               <div className="lg:col-span-7">
-                <div className="bg-[#FFFDF9] rounded-[var(--radius-md)] border border-[#D8D4CB] p-6">
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#E8E5DE]">
+                <div className="bg-[#FAF6F0] rounded-[var(--radius-md)] border border-[#DAB49D] p-6">
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#DAB49D]/40">
                     <div className="flex items-center gap-2">
-                      <Share2 className="w-4.5 h-4.5 text-[#C99A3A]" />
-                      <span className="text-[13px] uppercase tracking-[0.08em] font-semibold text-[#77736B]">
+                      <Share2 className="w-4.5 h-4.5 text-[#C08552]" />
+                      <span className="text-[13px] uppercase tracking-[0.08em] font-semibold text-[#895737]">
                         Live Social Card Preview
                       </span>
                     </div>
-                    <span className="text-[12px] font-mono text-[#9A968E]">
+                    <span className="text-[12px] font-mono text-[#895737]/75">
                       summary_large_image
                     </span>
                   </div>
 
                   {/* The Simulated Card */}
-                  <div className="rounded-[var(--radius-sm)] border border-[#D8D4CB] overflow-hidden bg-[#F7F5F0] max-w-[560px] mx-auto">
+                  <div className="rounded-[var(--radius-sm)] border border-[#DAB49D] overflow-hidden bg-[#F3E9DC] max-w-[560px] mx-auto">
                     {/* Preview Image or Placeholder */}
-                    <div className="w-full h-[230px] bg-[#F0EDE6] relative flex items-center justify-center overflow-hidden border-b border-[#D8D4CB]">
+                    <div className="w-full h-[230px] bg-[#DAB49D]/20 relative flex items-center justify-center overflow-hidden border-b border-[#DAB49D]">
                       {auditData.openGraph.image ? (
                         <img
                           src={auditData.openGraph.image}
@@ -542,12 +542,12 @@ export function SiteAudit() {
                           }}
                         />
                       ) : (
-                        <div className="flex flex-col items-center justify-center text-center p-6 text-[#9A968E]">
-                          <ImageIcon className="w-11 h-11 mb-2 text-[#B9684A]/70" />
-                          <span className="text-[14px] font-semibold text-[#B9684A]">
+                        <div className="flex flex-col items-center justify-center text-center p-6 text-[#895737]/75">
+                          <ImageIcon className="w-11 h-11 mb-2 text-[#C08552]/70" />
+                          <span className="text-[14px] font-semibold text-[#C08552]">
                             No Open Graph image found
                           </span>
-                          <span className="text-[13px] text-[#77736B] mt-0.5">
+                          <span className="text-[13px] text-[#895737] mt-0.5">
                             Social apps will show an empty text snippet
                           </span>
                         </div>
@@ -555,14 +555,14 @@ export function SiteAudit() {
                     </div>
 
                     {/* Preview Meta Text */}
-                    <div className="p-5 space-y-1.5 bg-[#FFFDF9]">
-                      <span className="text-[12px] uppercase tracking-[0.08em] text-[#9A968E] font-semibold block">
+                    <div className="p-5 space-y-1.5 bg-[#FAF6F0]">
+                      <span className="text-[12px] uppercase tracking-[0.08em] text-[#895737]/75 font-semibold block">
                         {auditData.domain}
                       </span>
-                      <h5 className="font-serif font-bold text-[18px] text-[#18202A] line-clamp-1">
+                      <h5 className="font-serif font-bold text-[18px] text-[#5E3023] line-clamp-1">
                         {auditData.openGraph.title || auditData.seoMeta.title || "No Title Specified"}
                       </h5>
-                      <p className="text-[14px] text-[#77736B] line-clamp-2 leading-relaxed">
+                      <p className="text-[14px] text-[#895737] line-clamp-2 leading-relaxed">
                         {auditData.openGraph.description ||
                           auditData.seoMeta.description ||
                           "No description tag found. Search engines and social apps will fall back to arbitrary page copy."}
@@ -580,13 +580,13 @@ export function SiteAudit() {
                   <span className="label-eyebrow block mb-1">
                     04 / Actionable Optimization Checklist
                   </span>
-                  <h3 className="font-serif text-[26px] text-[#18202A]">
+                  <h3 className="font-serif text-[26px] text-[#5E3023]">
                     Key issues detected & recommendations
                   </h3>
                 </div>
 
                 {/* Category Filter Pills */}
-                <div className="flex items-center flex-wrap gap-2 p-1.5 bg-[#F0EDE6] rounded-[var(--radius-sm)] self-start border border-[#D8D4CB]">
+                <div className="flex items-center flex-wrap gap-2 p-1.5 bg-[#DAB49D]/25 rounded-[var(--radius-sm)] self-start border border-[#DAB49D]">
                   {[
                     { id: "all", label: "All Audits" },
                     { id: "performance", label: "Speed & Code" },
@@ -600,8 +600,8 @@ export function SiteAudit() {
                       onClick={() => setActiveCategory(cat.id)}
                       className={`px-4 py-2 text-[14px] md:text-[15px] font-medium rounded-[var(--radius-sm)] transition-all cursor-pointer ${
                         activeCategory === cat.id
-                          ? "bg-[#18202A] text-[#F7F5F0]"
-                          : "text-[#77736B] hover:text-[#18202A]"
+                          ? "bg-[#5E3023] text-[#F3E9DC]"
+                          : "text-[#895737] hover:text-[#5E3023]"
                       }`}
                     >
                       {cat.label}
@@ -617,21 +617,21 @@ export function SiteAudit() {
                   let label = "Passed";
 
                   if (item.severity === "critical") {
-                    badge = "bg-[#FAF0EC] text-[#9A4C32] border-[#EBD0C6]";
+                    badge = "bg-[#DAB49D]/25 text-[#5E3023] border-[#DAB49D]";
                     label = "Critical Action Item";
                   } else if (item.severity === "warning") {
-                    badge = "bg-[#FAF5EC] text-[#8C661A] border-[#EBD8B2]";
+                    badge = "bg-[#C08552]/15 text-[#5E3023] border-[#C08552]/40";
                     label = "Optimization Opportunity";
                   }
 
                   return (
                     <div
                       key={item.id}
-                      className="p-7 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB] flex flex-col justify-between hover:border-[#18202A] transition-all"
+                      className="p-7 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D] flex flex-col justify-between hover:border-[#5E3023] transition-all"
                     >
                       <div>
                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
-                          <h5 className="font-serif font-bold text-[20px] md:text-[22px] text-[#18202A] leading-snug">
+                          <h5 className="font-serif font-bold text-[20px] md:text-[22px] text-[#5E3023] leading-snug">
                             {item.title}
                           </h5>
                           <span className={`text-[13px] md:text-[14px] font-semibold px-3 py-1 rounded-[var(--radius-sm)] border shrink-0 ${badge}`}>
@@ -639,15 +639,15 @@ export function SiteAudit() {
                           </span>
                         </div>
 
-                        <p className="text-[16px] md:text-[17px] text-[#55524B] leading-[1.65] mb-5">
+                        <p className="text-[16px] md:text-[17px] text-[#895737] leading-[1.65] mb-5">
                           {item.description}
                         </p>
                       </div>
 
-                      <div className="pt-4 border-t border-[#E8E5DE] text-[15px] md:text-[16px] flex items-start sm:items-center text-[#18202A]">
+                      <div className="pt-4 border-t border-[#DAB49D]/40 text-[15px] md:text-[16px] flex items-start sm:items-center text-[#5E3023]">
                         <span>
-                          <strong className="font-semibold text-[#18202A]">Business Impact:</strong>{" "}
-                          <span className="text-[#55524B]">{item.impact}</span>
+                          <strong className="font-semibold text-[#5E3023]">Business Impact:</strong>{" "}
+                          <span className="text-[#895737]">{item.impact}</span>
                         </span>
                       </div>
                     </div>
@@ -657,30 +657,30 @@ export function SiteAudit() {
             </div>
 
             {/* 05. Conversion Call to Action Box */}
-            <div className="p-8 md:p-14 rounded-[var(--radius-md)] bg-[#18202A] text-[#F7F5F0] relative overflow-hidden border border-[#2A3240]">
+            <div className="p-8 md:p-14 rounded-[var(--radius-md)] bg-[#5E3023] text-[#F3E9DC] relative overflow-hidden border border-[#482319]">
               <div className="relative z-10 max-w-3xl">
-                <div className="inline-flex items-center px-4 py-2 rounded-[var(--radius-sm)] bg-[rgba(201,154,58,0.18)] border border-[#C99A3A]/40 text-[#E5BF67] text-[14px] md:text-[15px] font-semibold mb-5">
+                <div className="inline-flex items-center px-4 py-2 rounded-[var(--radius-sm)] bg-[#C08552]/20 border border-[#C08552]/40 text-[#DAB49D] text-[14px] md:text-[15px] font-semibold mb-5">
                   <span>Turn These Audits Into Growth</span>
                 </div>
 
-                <h3 className="font-serif text-[32px] md:text-[42px] leading-[1.18] text-[#FFFDF9] mb-5 font-medium">
+                <h3 className="font-serif text-[32px] md:text-[42px] leading-[1.18] text-[#F3E9DC] mb-5 font-medium">
                   Ready to turn {auditData.domain} into a 95+ score lead engine?
                 </h3>
 
-                <p className="text-[18px] md:text-[20px] text-[#D8D4CB] leading-[1.6] mb-8 max-w-2xl">
+                <p className="text-[18px] md:text-[20px] text-[#DAB49D] leading-[1.6] mb-8 max-w-2xl">
                   I eliminate slow render-blocking assets, set up high-converting Open Graph share cards, and structure your site for maximum Google search visibility.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
                   <a
                     href="#contact"
-                    className="inline-flex items-center justify-center gap-2.5 bg-[#C99A3A] hover:bg-[#B3872F] text-[#18202A] font-semibold text-[16px] md:text-[17px] px-9 py-4.5 rounded-[var(--radius-md)] transition-all cursor-pointer shadow-sm hover:shadow-md"
+                    className="inline-flex items-center justify-center gap-2.5 bg-[#C08552] hover:bg-[#A96F3F] text-[#F3E9DC] font-semibold text-[16px] md:text-[17px] px-9 py-4.5 rounded-[var(--radius-md)] transition-all cursor-pointer shadow-sm hover:shadow-md"
                   >
                     <span>Fix My Website Bottlenecks</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
 
-                  <span className="text-[15px] md:text-[16px] text-[#D8D4CB] sm:ml-2">
+                  <span className="text-[15px] md:text-[16px] text-[#DAB49D] sm:ml-2">
                     Direct review • Tailored strategy
                   </span>
                 </div>

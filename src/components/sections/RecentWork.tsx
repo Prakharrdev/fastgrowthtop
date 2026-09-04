@@ -106,7 +106,7 @@ export function RecentWork() {
               >
                 <div className="group cursor-pointer">
                   {/* Image */}
-                  <div className="img-hover-zoom relative w-full aspect-[16/10] rounded-[var(--radius-lg)] mb-6 bg-[#F0EDE6]">
+                  <div className="img-hover-zoom relative w-full aspect-[16/10] rounded-[var(--radius-lg)] mb-6 bg-[#DAB49D]/20">
                     <Image
                       src={project.image}
                       alt={project.name}
@@ -117,17 +117,17 @@ export function RecentWork() {
                   </div>
 
                   {/* Category */}
-                  <span className="text-[11px] font-semibold text-[#9A968E] uppercase tracking-[0.12em] mb-3 block">
+                  <span className="text-[11px] font-semibold text-[#895737]/75 uppercase tracking-[0.12em] mb-3 block">
                     {project.category}
                   </span>
 
                   {/* Name — serif */}
-                  <h3 className="font-serif text-[26px] text-[#18202A] mb-2 leading-[1.15]">
+                  <h3 className="font-serif text-[26px] text-[#5E3023] mb-2 leading-[1.15]">
                     {project.name}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-[15px] text-[#77736B] leading-[1.6] mb-5">
+                  <p className="text-[15px] text-[#895737] leading-[1.6] mb-5">
                     {project.description}
                   </p>
 
