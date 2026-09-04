@@ -77,13 +77,6 @@ interface AuditResult {
   }>;
 }
 
-const SAMPLE_SITES = [
-  { label: "Stripe", url: "stripe.com" },
-  { label: "Linear", url: "linear.app" },
-  { label: "Airbnb", url: "airbnb.com" },
-  { label: "Github", url: "github.com" },
-];
-
 export function SiteAudit() {
   const ref = useScrollReveal();
   const [inputUrl, setInputUrl] = useState("");
@@ -223,24 +216,6 @@ export function SiteAudit() {
                   </>
                 )}
               </button>
-            </div>
-
-            {/* Quick Sample Presets */}
-            <div className="flex items-center justify-center flex-wrap gap-2.5 mt-4 text-[14px] text-[#895737]">
-              <span className="text-[12px] uppercase tracking-[0.08em] font-semibold text-[#895737]/75">Try an example:</span>
-              {SAMPLE_SITES.map((sample) => (
-                <button
-                  key={sample.url}
-                  type="button"
-                  onClick={() => {
-                    setInputUrl(sample.url);
-                    handleRunAudit(sample.url);
-                  }}
-                  className="px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[#DAB49D]/25 text-[#5E3023] hover:bg-[#5E3023] hover:text-[#F3E9DC] border border-[#DAB49D] transition-all text-[13px] font-medium cursor-pointer"
-                >
-                  {sample.label}
-                </button>
-              ))}
             </div>
 
             {error && (
