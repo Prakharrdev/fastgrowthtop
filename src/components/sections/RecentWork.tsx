@@ -72,9 +72,7 @@ export function RecentWork() {
         {/* Header row */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14 lg:mb-16">
           <div>
-            <div className="reveal mb-5">
-              <span className="label-eyebrow">Recent Work</span>
-            </div>
+
             <h2 className="reveal reveal-delay-1 text-section-heading mb-5">
               Here's what I've been<br />working on.
             </h2>

@@ -11,10 +11,7 @@ export function Hero() {
     <section id="hero" className="pt-[104px] pb-[48px] lg:pt-[124px] lg:pb-[64px]" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
-        {/* Eyebrow */}
-        <div className="reveal mb-6 lg:mb-8">
-          <span className="label-eyebrow">Based in Traverse City, Michigan</span>
-        </div>
+
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-start">
@@ -32,7 +29,7 @@ export function Hero() {
             </p>
 
             {/* CTAs */}
-            <div className="reveal reveal-delay-2 flex flex-col sm:flex-row items-start gap-4 mb-10 lg:mb-14">
+            <div className="reveal reveal-delay-2 flex flex-col sm:flex-row items-start gap-4">
               <a href="#contact" className="btn-primary">
                 Tell Me About Your Business
                 <ArrowRight className="w-4 h-4 arrow-icon" />
@@ -40,24 +37,6 @@ export function Hero() {
               <a href="#work" className="btn-secondary">
                 See My Work
               </a>
-            </div>
-
-            {/* Value Indicators */}
-            <div className="reveal reveal-delay-3 flex flex-col sm:flex-row gap-10 sm:gap-14 w-full">
-              {[
-                { title: "More Leads", desc: "Better quality inquiries" },
-                { title: "More Visibility", desc: "Get found by the right people" },
-                { title: "Less Busywork", desc: "Automations that save time" },
-              ].map((item, i) => (
-                <div key={item.title} className="flex flex-col">
-                  <span className="text-[14px] font-semibold text-[#18202A] mb-1 tracking-[0.01em]">
-                    {item.title}
-                  </span>
-                  <span className="text-[13px] text-[#77736B] leading-[1.5]">
-                    {item.desc}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -72,11 +51,6 @@ export function Hero() {
                 priority
                 sizes="(max-width: 1024px) 100vw, 42vw"
               />
-            </div>
-            <div className="mt-4">
-              <p className="text-[12px] text-[#9A968E] tracking-[0.04em]">
-                Traverse City, Michigan
-              </p>
             </div>
           </div>
         </div>

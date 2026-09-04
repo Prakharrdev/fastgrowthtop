@@ -6,14 +6,12 @@ import {
   Share2,
   AlertTriangle,
   CheckCircle2,
-  Info,
   ArrowRight,
   Sparkles,
   RefreshCw,
   Globe,
   ImageIcon,
   ExternalLink,
-  Flame,
 } from "lucide-react";
 import { CircularScore } from "@/components/ui/CircularScore";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -167,8 +165,14 @@ export function SiteAudit() {
         
         {/* Section Header (Centered) */}
         <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-10">
-          <div className="reveal mb-3">
-            <span className="label-eyebrow">Instant Website Audit</span>
+          {/* Goal Statement */}
+          <div className="reveal mb-8 max-w-[640px]">
+            <p className="font-serif text-[22px] md:text-[26px] text-[#18202A] leading-snug mb-2 font-medium">
+              The goal is simple: more customers and less stress.
+            </p>
+            <p className="text-[18px] md:text-[21px] text-[#77736B] leading-[1.6]">
+              I handle the digital so you can focus on your business.
+            </p>
           </div>
 
           <h2 className="reveal reveal-delay-1 text-section-heading mb-5">
@@ -594,7 +598,7 @@ export function SiteAudit() {
                       key={cat.id}
                       type="button"
                       onClick={() => setActiveCategory(cat.id)}
-                      className={`px-3.5 py-1.5 text-[13px] font-medium rounded-[var(--radius-sm)] transition-all cursor-pointer ${
+                      className={`px-4 py-2 text-[14px] md:text-[15px] font-medium rounded-[var(--radius-sm)] transition-all cursor-pointer ${
                         activeCategory === cat.id
                           ? "bg-[#18202A] text-[#F7F5F0]"
                           : "text-[#77736B] hover:text-[#18202A]"
@@ -607,48 +611,44 @@ export function SiteAudit() {
               </div>
 
               {/* Issues Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredDiagnostics.map((item) => {
-                  let badge = "bg-[#EDF7EE] text-[#226327] border-[#CBE5CF]";
-                  let icon = <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0 mt-0.5" />;
+                  let badge = "bg-[#EDF7EE] text-[#1E5622] border-[#CBE5CF]";
                   let label = "Passed";
 
                   if (item.severity === "critical") {
                     badge = "bg-[#FAF0EC] text-[#9A4C32] border-[#EBD0C6]";
-                    icon = <AlertTriangle className="w-5 h-5 text-[#B9684A] shrink-0 mt-0.5" />;
                     label = "Critical Action Item";
                   } else if (item.severity === "warning") {
                     badge = "bg-[#FAF5EC] text-[#8C661A] border-[#EBD8B2]";
-                    icon = <Info className="w-5 h-5 text-[#C99A3A] shrink-0 mt-0.5" />;
                     label = "Optimization Opportunity";
                   }
 
                   return (
                     <div
                       key={item.id}
-                      className="p-6 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB] flex flex-col justify-between hover:border-[#18202A] transition-all"
+                      className="p-7 rounded-[var(--radius-md)] bg-[#FFFDF9] border border-[#D8D4CB] flex flex-col justify-between hover:border-[#18202A] transition-all"
                     >
                       <div>
-                        <div className="flex items-start justify-between gap-3 mb-2.5">
-                          <div className="flex items-start gap-3">
-                            {icon}
-                            <h5 className="font-serif font-bold text-[18px] text-[#18202A] leading-snug">
-                              {item.title}
-                            </h5>
-                          </div>
-                          <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-[var(--radius-sm)] border shrink-0 uppercase tracking-wider ${badge}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+                          <h5 className="font-serif font-bold text-[20px] md:text-[22px] text-[#18202A] leading-snug">
+                            {item.title}
+                          </h5>
+                          <span className={`text-[13px] md:text-[14px] font-semibold px-3 py-1 rounded-[var(--radius-sm)] border shrink-0 ${badge}`}>
                             {label}
                           </span>
                         </div>
 
-                        <p className="text-[15px] text-[#77736B] leading-relaxed pl-8 mb-4">
+                        <p className="text-[16px] md:text-[17px] text-[#55524B] leading-[1.65] mb-5">
                           {item.description}
                         </p>
                       </div>
 
-                      <div className="pt-3.5 border-t border-[#E8E5DE] pl-8 text-[14px] flex items-center gap-2 text-[#9A968E]">
-                        <Flame className="w-4 h-4 text-[#C99A3A] shrink-0" />
-                        <span><strong className="text-[#18202A]">Business Impact:</strong> {item.impact}</span>
+                      <div className="pt-4 border-t border-[#E8E5DE] text-[15px] md:text-[16px] flex items-start sm:items-center text-[#18202A]">
+                        <span>
+                          <strong className="font-semibold text-[#18202A]">Business Impact:</strong>{" "}
+                          <span className="text-[#55524B]">{item.impact}</span>
+                        </span>
                       </div>
                     </div>
                   );
@@ -657,31 +657,31 @@ export function SiteAudit() {
             </div>
 
             {/* 05. Conversion Call to Action Box */}
-            <div className="p-8 md:p-12 rounded-[var(--radius-md)] bg-[#18202A] text-[#F7F5F0] relative overflow-hidden border border-[#2A3240]">
+            <div className="p-8 md:p-14 rounded-[var(--radius-md)] bg-[#18202A] text-[#F7F5F0] relative overflow-hidden border border-[#2A3240]">
               <div className="relative z-10 max-w-3xl">
-                <div className="inline-flex items-center px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[rgba(201,154,58,0.15)] border border-[#C99A3A]/30 text-[#E5BF67] text-[13px] font-semibold mb-4">
+                <div className="inline-flex items-center px-4 py-2 rounded-[var(--radius-sm)] bg-[rgba(201,154,58,0.18)] border border-[#C99A3A]/40 text-[#E5BF67] text-[14px] md:text-[15px] font-semibold mb-5">
                   <span>Turn These Audits Into Growth</span>
                 </div>
 
-                <h3 className="font-serif text-[30px] md:text-[36px] leading-tight text-[#FFFDF9] mb-4">
+                <h3 className="font-serif text-[32px] md:text-[42px] leading-[1.18] text-[#FFFDF9] mb-5 font-medium">
                   Ready to turn {auditData.domain} into a 95+ score lead engine?
                 </h3>
 
-                <p className="text-[17px] text-[#D8D4CB] leading-relaxed mb-8 max-w-2xl">
+                <p className="text-[18px] md:text-[20px] text-[#D8D4CB] leading-[1.6] mb-8 max-w-2xl">
                   I eliminate slow render-blocking assets, set up high-converting Open Graph share cards, and structure your site for maximum Google search visibility.
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
                   <a
                     href="#contact"
-                    className="inline-flex items-center justify-center gap-2 bg-[#C99A3A] hover:bg-[#B3872F] text-[#18202A] font-semibold text-[15px] px-8 py-4 rounded-[var(--radius-md)] transition-all cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2.5 bg-[#C99A3A] hover:bg-[#B3872F] text-[#18202A] font-semibold text-[16px] md:text-[17px] px-9 py-4.5 rounded-[var(--radius-md)] transition-all cursor-pointer shadow-sm hover:shadow-md"
                   >
                     <span>Fix My Website Bottlenecks</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
 
-                  <span className="text-[14px] text-[#9A968E] sm:ml-2">
-                    ✓ Direct 1-on-1 review • No account managers
+                  <span className="text-[15px] md:text-[16px] text-[#D8D4CB] sm:ml-2">
+                    Direct review • Tailored strategy
                   </span>
                 </div>
               </div>

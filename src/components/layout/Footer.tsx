@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const navLinks = [
-  { label: "Solutions", href: "#solutions" },
+  { label: "Audit", href: "#audit" },
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Reviews", href: "#reviews" },
