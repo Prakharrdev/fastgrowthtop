@@ -465,7 +465,8 @@ export function RecentWork() {
         >
           <div
             ref={thumbnailsContainerRef}
-            className="flex items-center gap-3 sm:gap-4 overflow-x-auto py-2 px-1 no-scrollbar scroll-smooth"
+            data-lenis-prevent
+            className="flex items-center gap-3 sm:gap-4 overflow-x-auto py-2 px-1 no-scrollbar"
           >
             {projectsData.map((project, idx) => {
               const isActive = idx === activeIndex;
