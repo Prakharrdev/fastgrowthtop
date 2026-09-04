@@ -20,6 +20,7 @@ interface AuditResult {
   url: string;
   domain: string;
   timestamp: string;
+  isLiveLighthouse?: boolean;
   scores: {
     performance: number;
     accessibility: number;
@@ -77,6 +78,13 @@ interface AuditResult {
   }>;
 }
 
+const SAMPLE_SITES = [
+  { label: "Stripe", url: "stripe.com" },
+  { label: "Linear", url: "linear.app" },
+  { label: "Vercel", url: "vercel.com" },
+  { label: "GitHub", url: "github.com" },
+];
+
 export function SiteAudit() {
   const ref = useScrollReveal();
   const [inputUrl, setInputUrl] = useState("");
@@ -109,7 +117,7 @@ export function SiteAudit() {
 
     const stepInterval = setInterval(() => {
       setScanStep((prev) => (prev < scanStepsList.length - 1 ? prev + 1 : prev));
-    }, 700);
+    }, 1600);
 
     try {
       const res = await fetch("/api/audit", {
@@ -218,6 +226,27 @@ export function SiteAudit() {
               </button>
             </div>
 
+            {/* Quick Sample Presets */}
+            <div className="flex items-center justify-center flex-wrap gap-2 mt-4 text-[14px] text-[#895737]">
+              <span className="text-[12px] uppercase tracking-[0.08em] font-semibold text-[#895737]/75">
+                Try an example:
+              </span>
+              {SAMPLE_SITES.map((sample) => (
+                <button
+                  key={sample.url}
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => {
+                    setInputUrl(sample.url);
+                    handleRunAudit(sample.url);
+                  }}
+                  className="px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[#FAF6F0] text-[#5E3023] hover:bg-[#5E3023] hover:text-[#FAF6F0] border border-[#DAB49D] transition-all text-[13px] font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-2xs"
+                >
+                  {sample.label}
+                </button>
+              ))}
+            </div>
+
             {error && (
               <div className="mt-4 p-4 bg-[#DAB49D]/20 border border-[#DAB49D] text-[#5E3023] text-[15px] rounded-[var(--radius-md)] flex items-center gap-3 justify-center">
                 <AlertTriangle className="w-5 h-5 shrink-0 text-[#C08552]" />
@@ -271,7 +300,7 @@ export function SiteAudit() {
                   />
                 )}
                 <div>
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2.5">
                     <h3 className="font-serif text-[22px] font-bold text-[#5E3023]">
                       {auditData.domain}
                     </h3>
@@ -283,9 +312,24 @@ export function SiteAudit() {
                     >
                       <ExternalLink className="w-4.5 h-4.5" />
                     </a>
+
+                    {auditData.isLiveLighthouse ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-[#EDF7EE] text-[#1E5C25] border border-[#BCE1C0] shadow-xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#2E7D32]" />
+                        Verified Google Lighthouse
+                      </span>
+                    ) : (
+                      <span
+                        title="Live Google API timed out or rate-limited; estimated using live DOM structure & server response benchmarks"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-[#F3E9DC] text-[#895737] border border-[#DAB49D]"
+                      >
+                        <Sparkles className="w-3 h-3 text-[#C08552]" />
+                        Estimated Benchmark
+                      </span>
+                    )}
                   </div>
                   <p className="text-[14px] text-[#895737] mt-0.5">
-                    Audited {new Date(auditData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Powered by Google Lighthouse & Core Web Vitals
+                    Audited {new Date(auditData.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {auditData.isLiveLighthouse ? "Powered by Live Google Lighthouse API" : "DOM Structure & Heuristic Speed Benchmark"}
                   </p>
                 </div>
               </div>
