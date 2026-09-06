@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, ChevronLeft, ChevronRight, ArrowRight, ExternalLink } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCarousel } from "@/hooks/useCarousel";
 import { useEffect, useState } from "react";
@@ -191,16 +191,6 @@ export function Reviews() {
           </div>
         </div>
 
-        {/* CTA Strip */}
-        <div className="reveal mt-20 bg-[#DAB49D]/20 rounded-[var(--radius-lg)] py-10 px-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-center sm:text-left">
-          <p className="font-serif text-[22px] text-[#5E3023]">
-            Ready to get results like these?
-          </p>
-          <a href="#contact" className="btn-primary text-[13px]">
-            Let's Talk
-            <ArrowRight className="w-3.5 h-3.5 arrow-icon" />
-          </a>
-        </div>
       </div>
     </section>
   );
