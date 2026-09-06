@@ -8,7 +8,7 @@ export function Hero() {
   const ref = useScrollReveal();
 
   return (
-    <section id="hero" className="pt-[104px] pb-[48px] lg:pt-[124px] lg:pb-[64px]" ref={ref}>
+    <section id="hero" className="pt-[104px] pb-[28px] lg:pt-[124px] lg:pb-[36px]" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
 
 

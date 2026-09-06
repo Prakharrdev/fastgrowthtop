@@ -10,9 +10,7 @@ import {
   Sparkles,
   RefreshCw,
   Globe,
-  ImageIcon,
   ExternalLink,
-  Activity,
   Clock,
   Loader2,
   Smartphone,
@@ -141,7 +139,6 @@ export function SiteAudit() {
   const [elapsedMs, setElapsedMs] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [auditData, setAuditData] = useState<AuditResult | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [, startTransition] = useTransition();
 
   // Smooth asymptotic progress calculation (never freezes at 100% until response arrives)
@@ -212,12 +209,6 @@ export function SiteAudit() {
     }
   };
 
-  const filteredDiagnostics =
-    auditData?.diagnostics.filter((item) => {
-      if (activeCategory === "all") return true;
-      return item.category === activeCategory;
-    }) || [];
-
   const averageScore = auditData
     ? Math.round(
         (auditData.scores.performance +
@@ -229,26 +220,16 @@ export function SiteAudit() {
     : 0;
 
   return (
-    <section className="section-padding relative" ref={ref}>
+    <section className="pt-4 pb-14 lg:pt-8 lg:pb-20 relative" ref={ref}>
       <div className="max-w-[1360px] mx-auto px-6 md:px-10 lg:px-14">
         
         {/* Section Header (Centered) */}
         <div className="flex flex-col items-center text-center max-w-[880px] mx-auto mb-10">
-          {/* Goal Statement */}
-          <div className="reveal mb-8 max-w-[640px]">
-            <p className="font-serif text-[22px] md:text-[26px] text-[#5E3023] leading-snug mb-2 font-medium">
-              The goal is simple: more customers and less stress.
-            </p>
-            <p className="text-[18px] md:text-[21px] text-[#895737] leading-[1.6]">
-              I handle the digital so you can focus on your business.
-            </p>
-          </div>
-
-          <h2 className="reveal reveal-delay-1 text-section-heading mb-5">
+          <h2 className="reveal text-section-heading mb-5">
             Is your website losing clients before it even loads?
           </h2>
 
-          <p className="reveal reveal-delay-2 text-[19px] md:text-[21px] text-[#895737] leading-[1.6] max-w-[760px]">
+          <p className="reveal reveal-delay-1 text-[19px] md:text-[21px] text-[#895737] leading-[1.6] max-w-[760px]">
             Put in your domain name. We'll run a real-time <strong>Lighthouse & Speed Audit</strong> to benchmark Core Web Vitals, check for missing Open Graph social cards, and pinpoint SEO bottlenecks.
           </p>
 
@@ -258,7 +239,7 @@ export function SiteAudit() {
               e.preventDefault();
               handleRunAudit();
             }}
-            className="reveal reveal-delay-3 w-full mt-10 max-w-[700px]"
+            className="reveal reveal-delay-2 w-full mt-10 max-w-[700px]"
           >
             <div className="flex flex-col sm:flex-row items-stretch gap-3 p-2 bg-[#FAF6F0] rounded-[var(--radius-md)] border border-[#DAB49D] focus-within:border-[#5E3023] transition-all">
               <div className="flex items-center flex-1 px-4 gap-3 min-w-0">
@@ -500,9 +481,6 @@ export function SiteAudit() {
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                 <div>
-                  <span className="label-eyebrow block mb-1">
-                    01 / Lighthouse Category Scores & Overall Average
-                  </span>
                   <h3 className="font-serif text-[24px] text-[#5E3023]">
                     Overall Site Health: <span className="font-bold">{averageScore}/100</span>
                   </h3>
@@ -540,292 +518,6 @@ export function SiteAudit() {
               </div>
             </div>
 
-            {/* 02. Speed & Core Web Vitals Breakdown */}
-            <div>
-              <span className="label-eyebrow block mb-2">
-                02 / Core Web Vitals & Speed Metrics (GTmetrix / Lighthouse)
-              </span>
-              <h3 className="font-serif text-[22px] text-[#5E3023] mb-5">
-                Load speed & responsiveness benchmarks
-              </h3>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-                {/* LCP */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    LCP (Largest Paint)
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.lcp.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 2.5s
-                  </span>
-                </div>
-
-                {/* FCP */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    FCP (First Paint)
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.fcp.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 1.8s
-                  </span>
-                </div>
-
-                {/* CLS */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    CLS (Layout Shift)
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.cls.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 0.10
-                  </span>
-                </div>
-
-                {/* TBT */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    TBT (Block Time)
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.tbt.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 200ms
-                  </span>
-                </div>
-
-                {/* Speed Index */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    Speed Index
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.speedIndex.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 3.4s
-                  </span>
-                </div>
-
-                {/* TTFB */}
-                <div className="p-5 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D]">
-                  <span className="text-[12px] uppercase tracking-[0.06em] text-[#895737]/75 font-semibold block mb-1.5">
-                    TTFB (Latency)
-                  </span>
-                  <span className="font-serif text-[26px] text-[#5E3023] font-bold block">
-                    {auditData.metrics.ttfb.value}
-                  </span>
-                  <span className="text-[13px] text-[#895737] mt-1 block">
-                    Target: &lt; 250ms
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* 03. Social Share / Open Graph Live Simulator */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Left explanation */}
-              <div className="lg:col-span-5 space-y-4">
-                <span className="label-eyebrow block">
-                  03 / Social Open Graph & Share Preview
-                </span>
-                <h3 className="font-serif text-[26px] text-[#5E3023] leading-snug">
-                  How your site looks when shared on iMessage, LinkedIn & Twitter
-                </h3>
-                <p className="text-[16px] text-[#895737] leading-[1.6]">
-                  Whenever someone texts your link or shares it on social media, platforms read your Open Graph meta tags. If your image or description is missing, it displays as an unclickable blank snippet.
-                </p>
-
-                {/* OG Status Points */}
-                <div className="space-y-3.5 pt-2">
-                  <div className="flex items-center gap-3 text-[15px]">
-                    {auditData.openGraph.hasOgImage ? (
-                      <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
-                    ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
-                    )}
-                    <span className={auditData.openGraph.hasOgImage ? "text-[#5E3023]" : "text-[#C08552] font-semibold"}>
-                      {auditData.openGraph.hasOgImage ? "Open Graph image configured" : "Missing og:image (high priority fix)"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-[15px]">
-                    {auditData.seoMeta.hasMetaDescription ? (
-                      <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
-                    ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
-                    )}
-                    <span className="text-[#5E3023]">
-                      {auditData.seoMeta.hasMetaDescription
-                        ? `Meta description present (${auditData.seoMeta.descriptionLength} chars)`
-                        : "Missing meta description"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3 text-[15px]">
-                    {auditData.pageStats.isHttps ? (
-                      <CheckCircle2 className="w-5 h-5 text-[#2E7D32] shrink-0" />
-                    ) : (
-                      <AlertTriangle className="w-5 h-5 text-[#C08552] shrink-0" />
-                    )}
-                    <span className="text-[#5E3023]">
-                      {auditData.pageStats.isHttps ? "Secure SSL certificate active" : "Insecure HTTP protocol"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Social Share Card Preview */}
-              <div className="lg:col-span-7">
-                <div className="bg-[#FAF6F0] rounded-[var(--radius-md)] border border-[#DAB49D] p-6">
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#DAB49D]/40">
-                    <div className="flex items-center gap-2">
-                      <Share2 className="w-4.5 h-4.5 text-[#C08552]" />
-                      <span className="text-[13px] uppercase tracking-[0.08em] font-semibold text-[#895737]">
-                        Live Social Card Preview
-                      </span>
-                    </div>
-                    <span className="text-[12px] font-mono text-[#895737]/75">
-                      summary_large_image
-                    </span>
-                  </div>
-
-                  {/* The Simulated Card */}
-                  <div className="rounded-[var(--radius-sm)] border border-[#DAB49D] overflow-hidden bg-[#F3E9DC] max-w-[560px] mx-auto">
-                    {/* Preview Image or Placeholder */}
-                    <div className="w-full h-[230px] bg-[#DAB49D]/20 relative flex items-center justify-center overflow-hidden border-b border-[#DAB49D]">
-                      {auditData.openGraph.image ? (
-                        <img
-                          src={auditData.openGraph.image}
-                          alt="Open Graph Preview"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLElement).style.display = "none";
-                          }}
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-center p-6 text-[#895737]/75">
-                          <ImageIcon className="w-11 h-11 mb-2 text-[#C08552]/70" />
-                          <span className="text-[14px] font-semibold text-[#C08552]">
-                            No Open Graph image found
-                          </span>
-                          <span className="text-[13px] text-[#895737] mt-0.5">
-                            Social apps will show an empty text snippet
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Preview Meta Text */}
-                    <div className="p-5 space-y-1.5 bg-[#FAF6F0]">
-                      <span className="text-[12px] uppercase tracking-[0.08em] text-[#895737]/75 font-semibold block">
-                        {auditData.domain}
-                      </span>
-                      <h5 className="font-serif font-bold text-[18px] text-[#5E3023] line-clamp-1">
-                        {auditData.openGraph.title || auditData.seoMeta.title || "No Title Specified"}
-                      </h5>
-                      <p className="text-[14px] text-[#895737] line-clamp-2 leading-relaxed">
-                        {auditData.openGraph.description ||
-                          auditData.seoMeta.description ||
-                          "No description tag found. Search engines and social apps will fall back to arbitrary page copy."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 04. Actionable Diagnostics ("What is missing & how we fix it") */}
-            <div>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <span className="label-eyebrow block mb-1">
-                    04 / Actionable Optimization Checklist
-                  </span>
-                  <h3 className="font-serif text-[26px] text-[#5E3023]">
-                    Key issues detected & recommendations
-                  </h3>
-                </div>
-
-                {/* Category Filter Pills */}
-                <div className="flex items-center flex-wrap gap-2 p-1.5 bg-[#DAB49D]/25 rounded-[var(--radius-sm)] self-start border border-[#DAB49D]">
-                  {[
-                    { id: "all", label: "All Audits" },
-                    { id: "performance", label: "Speed & Code" },
-                    { id: "seo", label: "SEO & Meta" },
-                    { id: "images", label: "Images & Media" },
-                    { id: "accessibility", label: "Security & A11y" },
-                  ].map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setActiveCategory(cat.id)}
-                      className={`px-4 py-2 text-[14px] md:text-[15px] font-medium rounded-[var(--radius-sm)] transition-all cursor-pointer ${
-                        activeCategory === cat.id
-                          ? "bg-[#5E3023] text-[#F3E9DC]"
-                          : "text-[#895737] hover:text-[#5E3023]"
-                      }`}
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Issues Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredDiagnostics.map((item) => {
-                  let badge = "bg-[#EDF7EE] text-[#1E5622] border-[#CBE5CF]";
-                  let label = "Passed";
-
-                  if (item.severity === "critical") {
-                    badge = "bg-[#DAB49D]/25 text-[#5E3023] border-[#DAB49D]";
-                    label = "Critical Action Item";
-                  } else if (item.severity === "warning") {
-                    badge = "bg-[#C08552]/15 text-[#5E3023] border-[#C08552]/40";
-                    label = "Optimization Opportunity";
-                  }
-
-                  return (
-                    <div
-                      key={item.id}
-                      className="p-7 rounded-[var(--radius-md)] bg-[#FAF6F0] border border-[#DAB49D] flex flex-col justify-between hover:border-[#5E3023] transition-all"
-                    >
-                      <div>
-                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
-                          <h5 className="font-serif font-bold text-[20px] md:text-[22px] text-[#5E3023] leading-snug">
-                            {item.title}
-                          </h5>
-                          <span className={`text-[13px] md:text-[14px] font-semibold px-3 py-1 rounded-[var(--radius-sm)] border shrink-0 ${badge}`}>
-                            {label}
-                          </span>
-                        </div>
-
-                        <p className="text-[16px] md:text-[17px] text-[#895737] leading-[1.65] mb-5">
-                          {item.description}
-                        </p>
-                      </div>
-
-                      <div className="pt-4 border-t border-[#DAB49D]/40 text-[15px] md:text-[16px] flex items-start sm:items-center text-[#5E3023]">
-                        <span>
-                          <strong className="font-semibold text-[#5E3023]">Business Impact:</strong>{" "}
-                          <span className="text-[#895737]">{item.impact}</span>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* 05. Conversion Call to Action Box */}
             <div className="p-8 md:p-14 rounded-[var(--radius-md)] bg-[#5E3023] text-[#F3E9DC] relative overflow-hidden border border-[#482319]">
