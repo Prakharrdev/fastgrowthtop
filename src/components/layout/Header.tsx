@@ -7,7 +7,6 @@ import { ArrowRight } from "lucide-react";
 const navItems = [
   { label: "Audit", href: "#audit" },
   { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
   { label: "Reviews", href: "#reviews" },
   { label: "Contact", href: "#contact" },
 ];
@@ -36,7 +35,7 @@ export function Header() {
     onScroll();
 
     // 2. High-performance IntersectionObserver for active navigation section
-    const sectionIds = ["audit", "work", "about", "reviews", "contact"];
+    const sectionIds = ["audit", "work", "reviews", "contact"];
     const visibleEntries = new Map<string, number>();
 
     const observer = new IntersectionObserver(
