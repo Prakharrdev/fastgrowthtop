@@ -294,9 +294,9 @@ export function RecentWork() {
         {/* ========================================================
             HEADER ROW: Section Title + Intro
            ======================================================== */}
-        <div className="relative mb-6 sm:mb-8 lg:mb-10 max-w-2xl">
+        <div className="relative mb-6 sm:mb-8 lg:mb-10 max-w-2xl mx-auto text-center flex flex-col items-center">
           {/* Masked Line-by-Line Headline Reveal (Section 5) */}
-          <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.04] text-[#5E3023] mb-3 tracking-tight">
+          <h2 className="font-serif text-[34px] sm:text-[46px] lg:text-[54px] xl:text-[60px] leading-[1.04] text-[#5E3023] mb-3 tracking-tight text-center">
             <span className="block overflow-hidden pb-1">
               <span ref={headingLine1Ref} className="inline-block will-change-transform">
                 Websites
@@ -317,7 +317,7 @@ export function RecentWork() {
 
           <p
             ref={introParagraphRef}
-            className="text-sm sm:text-base text-[#895737] leading-[1.6] max-w-xl"
+            className="text-sm sm:text-base text-[#895737] leading-[1.6] max-w-xl mx-auto text-center"
           >
             Every business has a different story. We design, develop, and host
             websites that bring those stories to life — and turn visitors into
