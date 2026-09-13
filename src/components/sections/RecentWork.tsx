@@ -5,11 +5,14 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projectsData, ProjectItem } from "@/data/projects";
+import { ProjectExperienceModal } from "@/components/sections/ProjectExperienceModal";
 
 export function RecentWork() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
   const [showIntro, setShowIntro] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProjectForModal, setSelectedProjectForModal] = useState<ProjectItem | null>(null);
 
   const totalProjects = projectsData.length;
   const activeProject: ProjectItem = projectsData[activeIndex];
@@ -307,57 +310,34 @@ export function RecentWork() {
               </p>
             </div>
 
-            {/* CTA Button: VIEW PROJECT → (docs/project.md Sec 17) */}
+            {/* CTA Button: VIEW PROJECT → (docs/project.md Sec 17 & 27: Case Study & Full Website Modal) */}
             <div className="pointer-events-auto inline-block">
-              {activeProject.liveUrl && activeProject.liveUrl.startsWith("http") ? (
-                <a
-                  href={activeProject.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 text-[#E99A22] hover:text-[#FFA94D] tracking-[0.2em] text-xs sm:text-sm font-semibold uppercase transition-colors cursor-pointer"
-                  aria-label={`View live project for ${activeProject.name}`}
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedProjectForModal(activeProject);
+                  setIsModalOpen(true);
+                }}
+                className="group inline-flex items-center gap-2.5 text-[#E99A22] hover:text-[#FFA94D] tracking-[0.2em] text-xs sm:text-sm font-semibold uppercase transition-colors cursor-pointer bg-transparent border-0 p-0"
+                aria-label={`Experience full website view for ${activeProject.name}`}
+              >
+                <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+                  VIEW PROJECT
+                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-2"
+                  aria-hidden="true"
                 >
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">
-                    VIEW PROJECT
-                  </span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-2"
-                    aria-hidden="true"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </a>
-              ) : (
-                <a
-                  href="#contact"
-                  className="group inline-flex items-center gap-2.5 text-[#E99A22] hover:text-[#FFA94D] tracking-[0.2em] text-xs sm:text-sm font-semibold uppercase transition-colors cursor-pointer"
-                  aria-label={`Inquire about work similar to ${activeProject.name}`}
-                >
-                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">
-                    VIEW PROJECT
-                  </span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-2"
-                    aria-hidden="true"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </a>
-              )}
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -457,6 +437,16 @@ export function RecentWork() {
           </button>
         </div>
       </div>
+
+      {/* ========================================================
+          FULL-SCREEN INTERACTIVE WEBSITE VIEWER MODAL (docs/project.md Sec 27)
+          Allows prospective clients to scroll and experience the complete website
+         ======================================================== */}
+      <ProjectExperienceModal
+        project={selectedProjectForModal}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 }
