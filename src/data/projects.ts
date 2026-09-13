@@ -21,6 +21,7 @@ export interface ProjectItem {
   previewSubheading?: string;
   keyFeatures?: string[];
   resultsHighlight?: string;
+  screenshots?: string[];
 }
 
 export const projectsData: ProjectItem[] = [
@@ -52,6 +53,7 @@ export const projectsData: ProjectItem[] = [
       "Fast page loads with modern image optimization",
     ],
     resultsHighlight: "+320% increase in online reservations within the first 60 days.",
+    screenshots: [],
   },
   {
     id: "aces-marine",
@@ -80,6 +82,7 @@ export const projectsData: ProjectItem[] = [
       "Ultra-fast mobile calling integration",
     ],
     resultsHighlight: "Ranked #1 on Google for boat lift installation in Grand Traverse County.",
+    screenshots: [],
   },
   {
     id: "beartooth-construction",
@@ -108,6 +111,7 @@ export const projectsData: ProjectItem[] = [
       "Custom typography and luxury architectural aesthetic",
     ],
     resultsHighlight: "Captured $4.2M in verified project inquiries within 6 months.",
+    screenshots: [],
   },
   {
     id: "moving-co",
@@ -136,6 +140,7 @@ export const projectsData: ProjectItem[] = [
       "Clean, modern layout replacing outdated local contractor tropes",
     ],
     resultsHighlight: "Tripled monthly inbound moving quote volume in the first quarter.",
+    screenshots: [],
   },
   {
     id: "hottub-solutions",
@@ -164,6 +169,7 @@ export const projectsData: ProjectItem[] = [
       "Traverse City regional SEO footprint",
     ],
     resultsHighlight: "Generated over 45 qualified spa buyer leads in the first 90 days.",
+    screenshots: [],
   },
   {
     id: "ivans-stump-grinding",
@@ -192,5 +198,6 @@ export const projectsData: ProjectItem[] = [
       "Lightning-fast mobile performance (<0.8s load time)",
     ],
     resultsHighlight: "Converted 64% of mobile visitors into booked estimates.",
+    screenshots: [],
   },
 ];

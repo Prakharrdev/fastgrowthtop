@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projectsData, ProjectItem } from "@/data/projects";
 import { ProjectExperienceModal } from "@/components/sections/ProjectExperienceModal";
 
-const INTRO_SHARE = 0.07;
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
 
 const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
@@ -27,7 +26,6 @@ interface Scene {
 
 export function RecentWork() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [showIntro, setShowIntro] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProjectForModal, setSelectedProjectForModal] = useState<ProjectItem | null>(null);
 
@@ -69,7 +67,6 @@ export function RecentWork() {
         }
       }
       setActiveIndex((prev) => (prev === idx ? prev : idx));
-      setShowIntro(progress < INTRO_SHARE);
     },
     [totalProjects]
   );
@@ -533,32 +530,7 @@ export function RecentWork() {
           </span>
         </div>
 
-        {/* ===================== SECTION INTRO OVERLAY ===================== */}
-        <div
-          className={`absolute inset-0 z-40 flex flex-col justify-center px-8 sm:px-14 lg:px-20 bg-[#0B1118]/85 backdrop-blur-[2px] transition-all duration-700 pointer-events-none ${
-            showIntro
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-8 pointer-events-none"
-          }`}
-          aria-hidden={!showIntro}
-        >
-          <div className="max-w-3xl">
-            <span className="font-mono text-xs sm:text-sm font-semibold tracking-[0.25em] text-[#E99A22] uppercase block mb-4">
-              04 / SELECTED WORK
-            </span>
-            <h2 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white leading-[1.06] tracking-tight">
-              Websites built to make
-              <br />
-              good businesses look
-              <br />
-              <span className="italic text-[#E99A22]">exceptional.</span>
-            </h2>
-            <div className="mt-8 flex items-center gap-3 text-white/50 text-xs font-mono tracking-[0.2em] uppercase">
-              <span>SCROLL DOWN TO EXPLORE</span>
-              <span className="animate-bounce">↓</span>
-            </div>
-          </div>
-        </div>
+
 
         {/* ===================== RIGHT-SIDE PROGRESS RAIL (desktop) ===================== */}
         <div
